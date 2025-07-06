@@ -1,0 +1,279 @@
+<div class="property-form-container">
+    <!-- Header -->
+    <div class="header-section">
+        <button mat-icon-button (click)="goBack()" matTooltip="Volver al listado">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1 class="form-title">
+            <mat-icon class="title-icon">{{ isEdit ? 'edit' : 'add' }}</mat-icon>
+            {{ isEdit ? 'Editar' : 'Crear' }} Propiedad
+        </h1>
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="form" (ngSubmit)="submit()" class="property-form">
+        <!-- Información básica -->
+        <mat-card class="form-section" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>info</mat-icon>
+                    Información básica
+                </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="form-grid">
+                    <!-- Título -->
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Título de la propiedad</mat-label>
+                        <input matInput formControlName="title" placeholder="Ej: Hermoso apartamento en el centro"
+                            maxlength="100">
+                        <mat-icon matPrefix>title</mat-icon>
+                        <mat-hint align="end">{{ form.get('title')?.value?.length || 0 }}/100</mat-hint>
+                        <mat-error *ngIf="form.get('title')?.hasError('required')">
+                            El título es requerido
+                        </mat-error>
+                        <mat-error *ngIf="form.get('title')?.hasError('minlength')">
+                            El título debe tener al menos 5 caracteres
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Tipo de propiedad -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Tipo de propiedad</mat-label>
+                        <mat-select formControlName="propertyType">
+                            <mat-option *ngFor="let type of propertyTypes" [value]="type.value">
+                                <mat-icon>{{ type.icon }}</mat-icon>
+                                {{ type.label }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>business</mat-icon>
+                        <mat-error *ngIf="form.get('propertyType')?.hasError('required')">
+                            Selecciona un tipo de propiedad
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Descripción -->
+                <!-- Descripción removida según requerimiento -->
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Ubicación y precio -->
+        <mat-card class="form-section" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>location_on</mat-icon>
+                    Ubicación y precio
+                </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="form-grid">
+                    <!-- Ubicación -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Ubicación</mat-label>
+                        <mat-select formControlName="location">
+                            <mat-option *ngFor="let location of locations" [value]="location">
+                                {{ location }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>location_on</mat-icon>
+                        <mat-error *ngIf="form.get('location')?.hasError('required')">
+                            La ubicación es requerida
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Precio -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Precio</mat-label>
+                        <input matInput type="number" formControlName="price" placeholder="0" min="0">
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <mat-error *ngIf="form.get('price')?.hasError('required')">
+                            El precio es requerido
+                        </mat-error>
+                        <mat-error *ngIf="form.get('price')?.hasError('min')">
+                            El precio debe ser mayor a 0
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Vista previa del precio -->
+                <div class="price-preview" *ngIf="form.get('price')?.value && form.get('price')?.value > 0">
+                    <mat-icon>visibility</mat-icon>
+                    <span>Precio formateado: {{ form.get('price')?.value | currency:'COP':'symbol':'1.0-0' }}</span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Características físicas -->
+        <mat-card class="form-section" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>home</mat-icon>
+                    Características físicas
+                </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="form-grid">
+                    <!-- Área -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Área construida</mat-label>
+                        <input matInput type="number" formControlName="area" placeholder="0" min="1">
+                        <span matTextSuffix>m²</span>
+                        <mat-icon matPrefix>square_foot</mat-icon>
+                        <mat-error *ngIf="form.get('area')?.hasError('required')">
+                            El área es requerida
+                        </mat-error>
+                        <mat-error *ngIf="form.get('area')?.hasError('min')">
+                            El área debe ser mayor a 0
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Habitaciones -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Habitaciones</mat-label>
+                        <mat-select formControlName="bedrooms">
+                            <mat-option [value]="0">Estudio (0)</mat-option>
+                            <mat-option *ngFor="let num of bedroomOptions" [value]="num">
+                                {{ num }} {{ num === 1 ? 'habitación' : 'habitaciones' }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>bed</mat-icon>
+                        <mat-error *ngIf="form.get('bedrooms')?.hasError('required')">
+                            Selecciona el número de habitaciones
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Baños -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Baños</mat-label>
+                        <mat-select formControlName="bathrooms">
+                            <mat-option *ngFor="let num of bathroomOptions" [value]="num">
+                                {{ num }} {{ num === 1 ? 'baño' : 'baños' }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>bathtub</mat-icon>
+                        <mat-error *ngIf="form.get('bathrooms')?.hasError('required')">
+                            Selecciona el número de baños
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Parqueaderos -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Parqueaderos</mat-label>
+                        <mat-select formControlName="parking">
+                            <mat-option [value]="0">Sin parqueadero</mat-option>
+                            <mat-option *ngFor="let num of parkingOptions" [value]="num">
+                                {{ num }} {{ num === 1 ? 'parqueadero' : 'parqueaderos' }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>local_parking</mat-icon>
+                        <mat-error *ngIf="form.get('parking')?.hasError('required')">
+                            Selecciona el número de parqueaderos
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Métricas calculadas -->
+                <div class="metrics-preview" *ngIf="showMetrics()">
+                    <mat-divider class="divider"></mat-divider>
+                    <h4 class="metrics-title">Vista previa de métricas</h4>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <mat-icon>calculate</mat-icon>
+                            <span>Precio por m²: {{ getPricePerSquareMeter() | currency:'COP':'symbol':'1.0-0' }}</span>
+                        </div>
+                        <div class="metric-item" *ngIf="form.get('bedrooms')?.value > 0">
+                            <mat-icon>bed</mat-icon>
+                            <span>m² por habitación: {{ getAreaPerBedroom() | number:'1.0-1' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Imagen -->
+        <mat-card class="form-section" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>image</mat-icon>
+                    Imagen de la propiedad
+                </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <!-- URL de imagen -->
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>URL de la imagen</mat-label>
+                    <input matInput formControlName="imageUrl" placeholder="https://ejemplo.com/imagen.jpg" type="url">
+                    <mat-icon matPrefix>link</mat-icon>
+                    <mat-hint>Proporciona una URL válida de imagen</mat-hint>
+                    <mat-error *ngIf="form.get('imageUrl')?.hasError('pattern')">
+                        Ingresa una URL válida
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Vista previa de la imagen -->
+                <div class="image-preview" *ngIf="form.get('imageUrl')?.value">
+                    <h4>Vista previa:</h4>
+                    <div class="preview-container">
+                        <img [src]="form.get('imageUrl')?.value" [alt]="form.get('title')?.value || 'Vista previa'"
+                            (error)="onImageError($event)" (load)="onImageLoad()" class="preview-image">
+                        <div class="image-overlay" *ngIf="imageLoading">
+                            <mat-spinner diameter="40"></mat-spinner>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensaje de imagen por defecto -->
+                <div class="default-image-message" *ngIf="!form.get('imageUrl')?.value">
+                    <mat-icon>image_not_supported</mat-icon>
+                    <p>Se usará una imagen por defecto si no se proporciona una URL</p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Acciones del formulario -->
+        <div class="form-actions">
+            <button mat-button type="button" (click)="goBack()" [disabled]="loading">
+                <mat-icon>cancel</mat-icon>
+                Cancelar
+            </button>
+
+            <button mat-button type="button" (click)="resetForm()" [disabled]="loading || form.pristine">
+                <mat-icon>refresh</mat-icon>
+                Limpiar
+            </button>
+
+            <button mat-raised-button color="primary" type="submit" [disabled]="!canSubmit()">
+                <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+                <mat-icon *ngIf="!loading">{{ isEdit ? 'save' : 'add' }}</mat-icon>
+                {{ loading ? 'Guardando...' : (isEdit ? 'Actualizar' : 'Crear') }} Propiedad
+            </button>
+        </div>
+
+        <!-- Información de validación -->
+        <mat-card class="validation-info" *ngIf="hasValidationErrors()" elevation="1">
+            <mat-card-content>
+                <div class="validation-header">
+                    <mat-icon color="warn">warning</mat-icon>
+                    <h4>Completa los campos requeridos:</h4>
+                </div>
+                <ul class="validation-list">
+                    <li *ngIf="form.get('title')?.hasError('required')">Título de la propiedad</li>
+                    <li *ngIf="form.get('propertyType')?.hasError('required')">Tipo de propiedad</li>
+                    <li *ngIf="form.get('location')?.hasError('required')">Ubicación</li>
+                    <li *ngIf="form.get('price')?.hasError('required') || form.get('price')?.hasError('min')">Precio
+                        válido</li>
+                    <li *ngIf="form.get('area')?.hasError('required') || form.get('area')?.hasError('min')">Área
+                        construida</li>
+                    <li *ngIf="form.get('bedrooms')?.hasError('required')">Número de habitaciones</li>
+                    <li *ngIf="form.get('bathrooms')?.hasError('required')">Número de baños</li>
+                    <li *ngIf="form.get('parking')?.hasError('required')">Número de parqueaderos</li>
+                </ul>
+            </mat-card-content>
+        </mat-card>
+    </form>
+</div>

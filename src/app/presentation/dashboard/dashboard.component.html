@@ -1,0 +1,13 @@
+<ng-container *ngIf="roleService.isAdmin(); else checkAgent">
+    <app-admin />
+</ng-container>
+
+<ng-template #checkAgent>
+    <ng-container *ngIf="roleService.isAgent(); else clientView">
+        <app-agent />
+    </ng-container>
+</ng-template>
+
+<ng-template #clientView>
+    <app-client />
+</ng-template>

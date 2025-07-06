@@ -1,0 +1,126 @@
+<!-- header.component.html -->
+<mat-toolbar class="header" color="primary">
+    <div class="nav-container">
+        <!-- Logo y título -->
+        <div class="logo-section">
+            <mat-icon class="logo-icon">home</mat-icon>
+            <a routerLink="/" class="logo-link">
+                <span class="logo-text">InmoHouse</span>
+            </a>
+        </div>
+
+        <!-- Spacer para empujar el contenido hacia la derecha -->
+        <span class="spacer"></span>
+
+        <!-- Menú de navegación -->
+        <div class="nav-menu">
+            <ng-container *ngIf="authService.isLoggedIn(); else guestLinks">
+                <!-- Menú de dashboard según rol -->
+                <ng-container *ngIf="roleService.isAdmin()">
+                    <button mat-button routerLink="/admin" class="nav-button">
+                        <mat-icon>admin_panel_settings</mat-icon>
+                        <span>Panel Admin</span>
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="roleService.isAgent()">
+                    <button mat-button routerLink="/agent" class="nav-button">
+                        <mat-icon>business_center</mat-icon>
+                        <span>Panel Agente</span>
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="roleService.isClient()">
+                    <button mat-button routerLink="/client" class="nav-button">
+                        <mat-icon>person_outline</mat-icon>
+                        <span>Mi Panel</span>
+                    </button>
+                </ng-container>
+
+                <!-- Menú de usuario -->
+                <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-trigger">
+                    <mat-icon>account_circle</mat-icon>
+                    <span>Mi Cuenta</span>
+                    <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+                </button>
+
+                <!-- Menú desplegable del usuario -->
+                <mat-menu #userMenu="matMenu" class="user-menu">
+                    <button mat-menu-item routerLink="/profile">
+                        <mat-icon>person</mat-icon>
+                        <span>Mi Perfil</span>
+                    </button>
+                    <button mat-menu-item routerLink="/change-password">
+                        <mat-icon>lock</mat-icon>
+                        <span>Cambiar Contraseña</span>
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item (click)="logout()" class="logout-item">
+                        <mat-icon>logout</mat-icon>
+                        <span>Cerrar Sesión</span>
+                    </button>
+                </mat-menu>
+            </ng-container>
+
+            <!-- Enlaces para usuarios no autenticados -->
+            <ng-template #guestLinks>
+                <button mat-button routerLink="/login" class="nav-button">
+                    <mat-icon>login</mat-icon>
+                    <span>Iniciar Sesión</span>
+                </button>
+                <button mat-raised-button routerLink="/register" class="register-button">
+                    <mat-icon>person_add</mat-icon>
+                    <span>Registrarse</span>
+                </button>
+            </ng-template>
+        </div>
+
+        <!-- Menú hamburguesa para móviles -->
+        <button mat-icon-button [matMenuTriggerFor]="mobileMenu" class="mobile-menu-button">
+            <mat-icon>menu</mat-icon>
+        </button>
+
+        <!-- Menú móvil -->
+        <mat-menu #mobileMenu="matMenu" class="mobile-menu">
+            <ng-container *ngIf="authService.isLoggedIn(); else guestMobileLinks">
+                <button mat-menu-item *ngIf="roleService.isAdmin()" routerLink="/admin">
+                    <mat-icon>admin_panel_settings</mat-icon>
+                    <span>Panel Admin</span>
+                </button>
+                <button mat-menu-item *ngIf="roleService.isAgent()" routerLink="/agent">
+                    <mat-icon>business_center</mat-icon>
+                    <span>Panel Agente</span>
+                </button>
+                <button mat-menu-item *ngIf="roleService.isClient()" routerLink="/client">
+                    <mat-icon>person_outline</mat-icon>
+                    <span>Mi Panel</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item routerLink="/profile">
+                    <mat-icon>person</mat-icon>
+                    <span>Mi Perfil</span>
+                </button>
+                <button mat-menu-item routerLink="/change-password">
+                    <mat-icon>lock</mat-icon>
+                    <span>Cambiar Contraseña</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="logout()" class="logout-item">
+                    <mat-icon>logout</mat-icon>
+                    <span>Cerrar Sesión</span>
+                </button>
+            </ng-container>
+
+            <ng-template #guestMobileLinks>
+                <button mat-menu-item routerLink="/login">
+                    <mat-icon>login</mat-icon>
+                    <span>Iniciar Sesión</span>
+                </button>
+                <button mat-menu-item routerLink="/register">
+                    <mat-icon>person_add</mat-icon>
+                    <span>Registrarse</span>
+                </button>
+            </ng-template>
+        </mat-menu>
+    </div>
+</mat-toolbar>

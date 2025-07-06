@@ -1,0 +1,293 @@
+<div class="analytics-container">
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+        <mat-card class="kpi-card total-properties" elevation="3">
+            <mat-card-content>
+                <div class="kpi-content">
+                    <div class="kpi-icon">
+                        <mat-icon>home</mat-icon>
+                    </div>
+                    <div class="kpi-info">
+                        <div class="kpi-value">{{ analytics.totalProperties | number }}</div>
+                        <div class="kpi-label">Total Propiedades</div>
+                        <div class="kpi-change positive" *ngIf="analytics.propertiesGrowth > 0">
+                            <mat-icon>trending_up</mat-icon>
+                            +{{ analytics.propertiesGrowth }}% este mes
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="kpi-card total-users" elevation="3">
+            <mat-card-content>
+                <div class="kpi-content">
+                    <div class="kpi-icon">
+                        <mat-icon>people</mat-icon>
+                    </div>
+                    <div class="kpi-info">
+                        <div class="kpi-value">{{ analytics.totalUsers | number }}</div>
+                        <div class="kpi-label">Usuarios Activos</div>
+                        <div class="kpi-change positive" *ngIf="analytics.usersGrowth > 0">
+                            <mat-icon>trending_up</mat-icon>
+                            +{{ analytics.usersGrowth }}% este mes
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="kpi-card total-revenue" elevation="3">
+            <mat-card-content>
+                <div class="kpi-content">
+                    <div class="kpi-icon">
+                        <mat-icon>attach_money</mat-icon>
+                    </div>
+                    <div class="kpi-info">
+                        <div class="kpi-value">{{ analytics.totalRevenue | currency:'COP':'symbol':'1.0-0' }}</div>
+                        <div class="kpi-label">Ingresos Totales</div>
+                        <div class="kpi-change positive" *ngIf="analytics.revenueGrowth > 0">
+                            <mat-icon>trending_up</mat-icon>
+                            +{{ analytics.revenueGrowth }}% este mes
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="kpi-card avg-price" elevation="3">
+            <mat-card-content>
+                <div class="kpi-content">
+                    <div class="kpi-icon">
+                        <mat-icon>trending_up</mat-icon>
+                    </div>
+                    <div class="kpi-info">
+                        <div class="kpi-value">{{ analytics.avgPrice | currency:'COP':'symbol':'1.0-0' }}</div>
+                        <div class="kpi-label">Precio Promedio</div>
+                        <div class="kpi-change neutral">
+                            <mat-icon>remove</mat-icon>
+                            {{ analytics.priceChange }}% vs mes anterior
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-grid">
+        <!-- Properties by Type Chart -->
+        <mat-card class="chart-card" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>donut_large</mat-icon>
+                    Propiedades por Tipo
+                </mat-card-title>
+                <div class="chart-actions">
+                    <button mat-icon-button [matMenuTriggerFor]="chartMenu1">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #chartMenu1="matMenu">
+                        <button mat-menu-item (click)="exportChart('properties-by-type')">
+                            <mat-icon>download</mat-icon>
+                            Exportar Gráfico
+                        </button>
+                    </mat-menu>
+                </div>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="chart-container">
+                    <canvas #propertiesByTypeChart width="400" height="300"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-grid">
+                        <div class="legend-item" *ngFor="let item of propertiesTypeData">
+                            <div class="legend-color" [style.background-color]="item.color"></div>
+                            <span class="legend-label">{{ item.label }}</span>
+                            <span class="legend-value">{{ item.value }}</span>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Properties by Location Chart -->
+        <mat-card class="chart-card" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>bar_chart</mat-icon>
+                    Propiedades por Ubicación
+                </mat-card-title>
+                <div class="chart-actions">
+                    <button mat-icon-button [matMenuTriggerFor]="chartMenu2">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #chartMenu2="matMenu">
+                        <button mat-menu-item (click)="exportChart('properties-by-location')">
+                            <mat-icon>download</mat-icon>
+                            Exportar Gráfico
+                        </button>
+                    </mat-menu>
+                </div>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="chart-container">
+                    <canvas #propertiesByLocationChart width="400" height="300"></canvas>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Price Trends Chart -->
+        <mat-card class="chart-card full-width" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>show_chart</mat-icon>
+                    Tendencia de Precios (Últimos 6 meses)
+                </mat-card-title>
+                <div class="chart-actions">
+                    <mat-button-toggle-group formControlName="priceViewMode" aria-label="Modo de vista">
+                        <mat-button-toggle value="line">Línea</mat-button-toggle>
+                        <mat-button-toggle value="bar">Barras</mat-button-toggle>
+                    </mat-button-toggle-group>
+                </div>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="chart-container large">
+                    <canvas #priceTrendsChart width="800" height="400"></canvas>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Statistics Tables -->
+    <div class="tables-grid">
+        <!-- Top Properties -->
+        <mat-card class="table-card" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>star</mat-icon>
+                    Propiedades Más Vistas
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="table-container">
+                    <table mat-table [dataSource]="topPropertiesData" class="analytics-table">
+                        <ng-container matColumnDef="title">
+                            <th mat-header-cell *matHeaderCellDef>Propiedad</th>
+                            <td mat-cell *matCellDef="let property">
+                                <div class="property-info">
+                                    <strong>{{ property.title }}</strong>
+                                    <span class="property-location">{{ property.location }}</span>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="views">
+                            <th mat-header-cell *matHeaderCellDef>Vistas</th>
+                            <td mat-cell *matCellDef="let property">
+                                <div class="metric-with-trend">
+                                    <span class="metric-value">{{ property.views | number }}</span>
+                                    <mat-icon class="trend-icon positive"
+                                        *ngIf="property.viewsTrend > 0">trending_up</mat-icon>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="price">
+                            <th mat-header-cell *matHeaderCellDef>Precio</th>
+                            <td mat-cell *matCellDef="let property">
+                                {{ property.price | currency:'COP':'symbol':'1.0-0' }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                            <td mat-cell *matCellDef="let property">
+                                <button mat-icon-button [routerLink]="['/dashboard/view', property.id]"
+                                    matTooltip="Ver detalles">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="topPropertiesColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: topPropertiesColumns;"></tr>
+                    </table>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Recent Activity -->
+        <mat-card class="table-card" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>history</mat-icon>
+                    Actividad Reciente
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="activity-list">
+                    <div class="activity-item" *ngFor="let activity of recentActivities">
+                        <div class="activity-icon">
+                            <mat-icon [ngClass]="getActivityIconClass(activity.type)">
+                                {{ getActivityIcon(activity.type) }}
+                            </mat-icon>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-description">{{ activity.description }}</div>
+                            <div class="activity-time">{{ activity.timestamp | date:'short' }}</div>
+                        </div>
+                        <div class="activity-actions" *ngIf="activity.actionable">
+                            <button mat-icon-button matTooltip="Ver detalles">
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Quick Stats -->
+    <mat-card class="quick-stats-card" elevation="2">
+        <mat-card-header>
+            <mat-card-title>
+                <mat-icon>speed</mat-icon>
+                Estadísticas Rápidas
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="quick-stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">{{ analytics.avgDaysOnMarket }}</div>
+                    <div class="stat-label">Días promedio en mercado</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ analytics.conversionRate }}%</div>
+                    <div class="stat-label">Tasa de conversión</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ analytics.mostPopularLocation }}</div>
+                    <div class="stat-label">Ubicación más popular</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ analytics.avgPricePerM2 | currency:'COP':'symbol':'1.0-0' }}</div>
+                    <div class="stat-label">Precio promedio por m²</div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" *ngIf="loading">
+    <mat-card class="loading-card">
+        <mat-card-content>
+            <div class="loading-content">
+                <mat-spinner diameter="60"></mat-spinner>
+                <h3>Cargando análisis...</h3>
+                <p>Procesando datos y generando informes</p>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

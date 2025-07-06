@@ -1,0 +1,173 @@
+.user-form-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-card {
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+
+  mat-card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 24px;
+    margin: -24px -24px 24px -24px;
+
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+
+      mat-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
+  mat-card-content {
+    padding: 24px;
+  }
+}
+
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.cancel-button {
+  min-width: 120px;
+
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.submit-button {
+  min-width: 140px;
+
+  mat-icon {
+    margin-right: 8px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.role-text {
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+// Estilos para mat-form-field
+.mat-mdc-form-field {
+  &.mat-form-field-appearance-outline {
+    .mat-mdc-form-field-outline {
+      border-radius: 8px;
+    }
+
+    &.mat-focused .mat-mdc-form-field-outline-thick {
+      border-width: 2px;
+    }
+  }
+}
+
+// Estilos para mat-select
+.mat-mdc-select-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .user-form-container {
+    padding: 16px;
+  }
+
+  .form-card {
+    mat-card-header {
+      padding: 16px;
+      margin: -16px -16px 16px -16px;
+
+      mat-card-title {
+        font-size: 1.25rem;
+
+        mat-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+
+    mat-card-content {
+      padding: 16px;
+    }
+  }
+
+  .form-actions {
+    flex-direction: column;
+
+    .cancel-button,
+    .submit-button {
+      width: 100%;
+      order: 2;
+    }
+
+    .cancel-button {
+      order: 1;
+    }
+  }
+}
+
+// Animaciones
+.form-card {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Estados de hover para botones
+.cancel-button:hover {
+  background-color: rgba(244, 67, 54, 0.04);
+}
+
+.submit-button:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.3);
+}

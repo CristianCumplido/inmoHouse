@@ -1,1 +1,195 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use "@angular/material" as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$inmoHouse-primary: mat.define-palette(mat.$indigo-palette);
+$inmoHouse-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$inmoHouse-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$inmoHouse-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $inmoHouse-primary,
+      accent: $inmoHouse-accent,
+      warn: $inmoHouse-warn,
+    ),
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($inmoHouse-theme);
+
 /* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+// Estilos globales para snackbars personalizados
+// Agregar estos estilos en tu archivo styles.scss global
+
+.success-snackbar {
+  background: #4caf50 !important;
+  color: white !important;
+
+  .mat-mdc-snack-bar-action {
+    color: #c8e6c9 !important;
+  }
+}
+
+.error-snackbar {
+  background: #f44336 !important;
+  color: white !important;
+
+  .mat-mdc-snack-bar-action {
+    color: #ffcdd2 !important;
+  }
+}
+
+.info-snackbar {
+  background: #2196f3 !important;
+  color: white !important;
+
+  .mat-mdc-snack-bar-action {
+    color: #bbdefb !important;
+  }
+}
+
+// Animaciones para snackbars
+.mat-mdc-snack-bar-container {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+// Estilos adicionales para mejorar la accesibilidad
+.property-detail-container {
+  // Focus visible para navegación por teclado
+  button:focus-visible,
+  [mat-raised-button]:focus-visible,
+  [mat-button]:focus-visible,
+  [mat-icon-button]:focus-visible {
+    outline: 2px solid #1976d2;
+    outline-offset: 2px;
+  }
+
+  // Mejora de contraste para textos
+  .feature-label,
+  .metric-label {
+    color: #424242;
+    font-weight: 500;
+  }
+
+  // Hover states mejorados
+  .feature-item:hover {
+    .feature-icon {
+      transform: scale(1.1);
+      transition: transform 0.2s ease;
+    }
+  }
+
+  // Estados de carga y error con mejor feedback visual
+  .loading-card,
+  .error-card {
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #1976d2;
+      box-shadow: 0 4px 20px rgba(25, 118, 210, 0.1);
+    }
+  }
+
+  // Responsive improvements para tablets
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .features-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .metrics-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .action-buttons {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  // Mejoras para modo oscuro (si lo implementas en el futuro)
+  @media (prefers-color-scheme: dark) {
+    background: #121212;
+
+    .title-card,
+    .features-card,
+    .description-card,
+    .actions-card,
+    .additional-info-card {
+      background: #1e1e1e;
+      color: #ffffff;
+    }
+
+    .feature-item,
+    .info-item {
+      background: #2a2a2a;
+      color: #ffffff;
+    }
+
+    .metric-card {
+      background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    }
+  }
+
+  // Print styles para cuando el usuario quiera imprimir
+  @media print {
+    .header-section,
+    .actions-card {
+      display: none !important;
+    }
+
+    .image-section .image-overlay {
+      background: transparent !important;
+    }
+
+    .property-image {
+      filter: grayscale(100%);
+    }
+
+    .features-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    * {
+      box-shadow: none !important;
+    }
+  }
+}

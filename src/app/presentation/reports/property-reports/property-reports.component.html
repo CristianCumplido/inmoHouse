@@ -1,0 +1,388 @@
+<div class="property-reports-container">
+    <!-- Header -->
+    <div class="reports-header">
+        <h1 class="page-title">
+            <mat-icon class="title-icon">home</mat-icon>
+            Informes de Propiedades
+        </h1>
+        <div class="header-actions">
+            <button mat-button (click)="exportToExcel()" [disabled]="loading">
+                <mat-icon>table_chart</mat-icon>
+                Exportar Excel
+            </button>
+            <button mat-raised-button color="primary" (click)="refreshData()" [disabled]="loading">
+                <mat-icon>refresh</mat-icon>
+                Actualizar
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <mat-card class="filters-card" elevation="2">
+        <mat-card-header>
+            <mat-card-title>
+                <mat-icon>filter_list</mat-icon>
+                Filtros Avanzados
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <form [formGroup]="filtersForm" class="filters-form">
+                <div class="filters-grid">
+                    <!-- Status Filter -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Estado</mat-label>
+                        <mat-select formControlName="status">
+                            <mat-option value="">Todos</mat-option>
+                            <mat-option value="active">Activa</mat-option>
+                            <mat-option value="sold">Vendida</mat-option>
+                            <mat-option value="rented">Alquilada</mat-option>
+                            <mat-option value="inactive">Inactiva</mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>assignment</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Property Type Filter -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Tipo de Propiedad</mat-label>
+                        <mat-select formControlName="propertyType">
+                            <mat-option value="">Todos</mat-option>
+                            <mat-option value="apartamento">Apartamento</mat-option>
+                            <mat-option value="casa">Casa</mat-option>
+                            <mat-option value="local">Local</mat-option>
+                            <mat-option value="oficina">Oficina</mat-option>
+                            <mat-option value="lote">Lote</mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>business</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Location Filter -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Ubicación</mat-label>
+                        <mat-select formControlName="location">
+                            <mat-option value="">Todas</mat-option>
+                            <mat-option *ngFor="let location of locations" [value]="location">
+                                {{ location }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>location_on</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Price Range -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Precio mínimo</mat-label>
+                        <input matInput type="number" formControlName="minPrice" placeholder="0">
+                        <span matTextPrefix>$ </span>
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Precio máximo</mat-label>
+                        <input matInput type="number" formControlName="maxPrice" placeholder="Sin límite">
+                        <span matTextPrefix>$ </span>
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Days on Market -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Días en mercado</mat-label>
+                        <mat-select formControlName="daysOnMarket">
+                            <mat-option value="">Todos</mat-option>
+                            <mat-option value="0-30">0-30 días</mat-option>
+                            <mat-option value="31-60">31-60 días</mat-option>
+                            <mat-option value="61-90">61-90 días</mat-option>
+                            <mat-option value="90+">Más de 90 días</mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>schedule</mat-icon>
+                    </mat-form-field>
+                </div>
+
+                <div class="filter-actions">
+                    <button mat-button type="button" (click)="clearFilters()" [disabled]="loading">
+                        <mat-icon>clear</mat-icon>
+                        Limpiar
+                    </button>
+                    <button mat-raised-button color="primary" type="button" (click)="applyFilters()"
+                        [disabled]="loading">
+                        <mat-icon>search</mat-icon>
+                        Buscar
+                    </button>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+        <mat-card class="summary-card total-properties" elevation="3">
+            <mat-card-content>
+                <div class="card-content">
+                    <div class="card-icon">
+                        <mat-icon>home</mat-icon>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-value">{{ summary.totalProperties | number }}</div>
+                        <div class="card-label">Total Propiedades</div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="summary-card active-properties" elevation="3">
+            <mat-card-content>
+                <div class="card-content">
+                    <div class="card-icon">
+                        <mat-icon>visibility</mat-icon>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-value">{{ summary.activeProperties | number }}</div>
+                        <div class="card-label">Propiedades Activas</div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="summary-card avg-price" elevation="3">
+            <mat-card-content>
+                <div class="card-content">
+                    <div class="card-icon">
+                        <mat-icon>trending_up</mat-icon>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-value">{{ summary.avgPrice | currency:'COP':'symbol':'1.0-0' }}</div>
+                        <div class="card-label">Precio Promedio</div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="summary-card avg-days" elevation="3">
+            <mat-card-content>
+                <div class="card-content">
+                    <div class="card-icon">
+                        <mat-icon>schedule</mat-icon>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-value">{{ summary.avgDaysOnMarket | number }}</div>
+                        <div class="card-label">Días Promedio en Mercado</div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Properties Table -->
+    <mat-card class="table-card" elevation="2">
+        <mat-card-header>
+            <mat-card-title>
+                <mat-icon>list</mat-icon>
+                Listado de Propiedades ({{ filteredProperties.length }})
+            </mat-card-title>
+            <div class="table-actions">
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Buscar</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Buscar propiedades...">
+                    <mat-icon matPrefix>search</mat-icon>
+                </mat-form-field>
+            </div>
+        </mat-card-header>
+
+        <mat-card-content>
+            <div class="table-container">
+                <table mat-table [dataSource]="dataSource" matSort class="properties-table">
+                    <!-- Title Column -->
+                    <ng-container matColumnDef="title">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Propiedad</th>
+                        <td mat-cell *matCellDef="let property">
+                            <div class="property-cell">
+                                <div class="property-title">{{ property.title }}</div>
+                                <div class="property-location">{{ property.location }}</div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Type Column -->
+                    <ng-container matColumnDef="propertyType">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+                        <td mat-cell *matCellDef="let property">
+                            <mat-chip-listbox>
+                                <mat-chip-option>{{ property.propertyType | titlecase }}</mat-chip-option>
+                            </mat-chip-listbox>
+                        </td>
+                    </ng-container>
+
+                    <!-- Price Column -->
+                    <ng-container matColumnDef="price">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+                        <td mat-cell *matCellDef="let property">
+                            <div class="price-cell">
+                                <div class="price-value">{{ property.price | currency:'COP':'symbol':'1.0-0' }}</div>
+                                <div class="price-per-m2">{{ property.pricePerM2 | currency:'COP':'symbol':'1.0-0' }}/m²
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Area Column -->
+                    <ng-container matColumnDef="area">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Área</th>
+                        <td mat-cell *matCellDef="let property">
+                            {{ property.area | number }} m²
+                        </td>
+                    </ng-container>
+
+                    <!-- Views Column -->
+                    <ng-container matColumnDef="views">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Vistas</th>
+                        <td mat-cell *matCellDef="let property">
+                            <div class="views-cell">
+                                <mat-icon class="views-icon">visibility</mat-icon>
+                                {{ property.views | number }}
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Contacts Column -->
+                    <ng-container matColumnDef="contacts">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Contactos</th>
+                        <td mat-cell *matCellDef="let property">
+                            <div class="contacts-cell">
+                                <mat-icon class="contacts-icon">contact_phone</mat-icon>
+                                {{ property.contacts | number }}
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Days on Market Column -->
+                    <ng-container matColumnDef="daysOnMarket">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Días en Mercado</th>
+                        <td mat-cell *matCellDef="let property">
+                            <div class="days-cell" [ngClass]="getDaysClass(property.daysOnMarket)">
+                                {{ property.daysOnMarket }}
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+                        <td mat-cell *matCellDef="let property">
+                            <span class="status-badge" [ngClass]="'status-' + property.status">
+                                {{ getStatusLabel(property.status) }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                        <td mat-cell *matCellDef="let property">
+                            <div class="action-buttons">
+                                <button mat-icon-button [routerLink]="['/dashboard/view', property.id]"
+                                    matTooltip="Ver detalles">
+                                    <mat-icon>visibility</mat-icon>
+                                </button>
+                                <button mat-icon-button (click)="viewPerformance(property)"
+                                    matTooltip="Ver rendimiento">
+                                    <mat-icon>analytics</mat-icon>
+                                </button>
+                                <button mat-icon-button [matMenuTriggerFor]="actionMenu" matTooltip="Más opciones">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #actionMenu="matMenu">
+                                    <a mat-menu-item [routerLink]="['/dashboard/edit', property.id]">
+                                        <mat-icon>edit</mat-icon>
+                                        <span>Editar</span>
+                                    </a>
+                                    <button mat-menu-item (click)="exportProperty(property)">
+                                        <mat-icon>download</mat-icon>
+                                        <span>Exportar</span>
+                                    </button>
+                                    <button mat-menu-item (click)="duplicateProperty(property)">
+                                        <mat-icon>content_copy</mat-icon>
+                                        <span>Duplicar</span>
+                                    </button>
+                                    <mat-divider></mat-divider>
+                                    <button mat-menu-item (click)="deleteProperty(property)" class="delete-action">
+                                        <mat-icon>delete</mat-icon>
+                                        <span>Eliminar</span>
+                                    </button>
+                                </mat-menu>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <!-- Table Header and Rows -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="property-row"
+                        [class.high-performance]="isHighPerformance(row)" (click)="selectProperty(row)"></tr>
+                </table>
+
+                <!-- No Data Message -->
+                <div class="no-data" *ngIf="filteredProperties.length === 0 && !loading">
+                    <mat-icon class="no-data-icon">search_off</mat-icon>
+                    <h3>No se encontraron propiedades</h3>
+                    <p>Intenta ajustar los filtros de búsqueda</p>
+                    <button mat-button color="primary" (click)="clearFilters()">
+                        <mat-icon>refresh</mat-icon>
+                        Limpiar filtros
+                    </button>
+                </div>
+            </div>
+
+            <!-- Paginator -->
+            <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" [pageSize]="25" showFirstLastButtons
+                aria-label="Seleccionar página de propiedades">
+            </mat-paginator>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Performance Chart -->
+    <mat-card class="chart-card" elevation="2" *ngIf="selectedProperty">
+        <mat-card-header>
+            <mat-card-title>
+                <mat-icon>trending_up</mat-icon>
+                Rendimiento de: {{ selectedProperty.title }}
+            </mat-card-title>
+            <button mat-icon-button (click)="closePerformanceChart()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="performance-metrics">
+                <div class="metric-item">
+                    <span class="metric-label">Vistas totales:</span>
+                    <span class="metric-value">{{ selectedProperty.views | number }}</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Contactos recibidos:</span>
+                    <span class="metric-value">{{ selectedProperty.contacts | number }}</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Tasa de conversión:</span>
+                    <span class="metric-value">{{ getConversionRate(selectedProperty) }}%</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Días en mercado:</span>
+                    <span class="metric-value">{{ selectedProperty.daysOnMarket }}</span>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas #performanceChart width="400" height="200"></canvas>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" *ngIf="loading">
+    <mat-card class="loading-card">
+        <mat-card-content>
+            <div class="loading-content">
+                <mat-spinner diameter="60"></mat-spinner>
+                <h3>Cargando informes...</h3>
+                <p>Procesando datos de propiedades</p>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

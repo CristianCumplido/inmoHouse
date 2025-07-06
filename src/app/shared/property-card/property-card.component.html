@@ -1,0 +1,18 @@
+<div class="card">
+    <img [src]="property.imageUrl" alt="Imagen inmueble" class="image" />
+
+    <div class="content">
+        <p class="location">{{ property.location }}</p>
+        <h3 class="price">{{ property.price | currency:'COP':'symbol':'1.0-0' }}</h3>
+        <p class="title">{{ property.title }}</p>
+
+        <div class="details">
+            <span>{{ property.area }} m²</span>
+            <span>{{ property.bedrooms }} hab.</span>
+            <span>{{ property.bathrooms }} bañ.</span>
+            <span>{{ property.parking }} par.</span>
+        </div>
+
+        <button class="contact" *ngIf="canContact">✉️ Contactar</button>
+    </div>
+</div>

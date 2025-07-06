@@ -1,0 +1,100 @@
+<!-- agent.component.html -->
+<div class="agent-panel">
+    <div class="agent-header">
+        <h1 class="agent-title">Panel de Agente</h1>
+        <p class="agent-subtitle">Gestiona tus propiedades y clientes</p>
+    </div>
+
+    <div class="agent-grid">
+        <div class="agent-card">
+            <div class="card-icon">
+                <mat-icon>apartment</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Propiedades</h3>
+                <p>Consulta y administra tu portafolio de propiedades</p>
+            </div>
+            <div class="card-actions">
+                <button mat-raised-button color="primary" routerLink="/dashboard/">
+                    Ver Propiedades
+                </button>
+            </div>
+        </div>
+
+        <div class="agent-card">
+            <div class="card-icon">
+                <mat-icon>people_outline</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Clientes</h3>
+                <p>Administra tus clientes y sus necesidades</p>
+            </div>
+            <div class="card-actions">
+                <button mat-raised-button color="accent" routerLink="/user">
+                    Gestionar Clientes
+                </button>
+            </div>
+        </div>
+
+        <!-- Cards adicionales específicas para agentes -->
+        <div class="agent-card">
+            <div class="card-icon">
+                <mat-icon>event</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Citas</h3>
+                <p>Programa y gestiona citas con clientes</p>
+            </div>
+            <div class="card-actions">
+                <button mat-raised-button color="warn" routerLink="/appointments">
+                    Ver Citas
+                </button>
+            </div>
+        </div>
+
+        <div class="agent-card">
+            <div class="card-icon">
+                <mat-icon>trending_up</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Ventas</h3>
+                <p>Revisa tu rendimiento y comisiones</p>
+            </div>
+            <div class="card-actions">
+                <button mat-stroked-button color="primary" routerLink="/sales">
+                    Ver Ventas
+                </button>
+            </div>
+        </div>
+
+        <div class="agent-card">
+            <div class="card-icon">
+                <mat-icon>phone</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Contactos</h3>
+                <p>Gestiona tus leads y prospectos</p>
+            </div>
+            <div class="card-actions">
+                <button mat-stroked-button color="accent" routerLink="/contacts">
+                    Gestionar Contactos
+                </button>
+            </div>
+        </div>
+
+        <div class="agent-card">
+            <div class="card-icon">
+                <mat-icon>description</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Documentos</h3>
+                <p>Administra contratos y documentos legales</p>
+            </div>
+            <div class="card-actions">
+                <button mat-stroked-button color="warn" routerLink="/documents">
+                    Ver Documentos
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

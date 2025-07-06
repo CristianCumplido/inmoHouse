@@ -1,0 +1,195 @@
+<div class="property-list-container">
+    <!-- Header con título y estadísticas -->
+    <div class="header-section">
+        <h1 class="main-title">
+            <mat-icon class="title-icon">apartment</mat-icon>
+            Listado de Propiedades
+        </h1>
+        <div class="stats-chips">
+            <mat-chip-listbox>
+                <mat-chip-option>
+                    <mat-icon>home</mat-icon>
+                    {{ allProperties.length }} Total
+                </mat-chip-option>
+                <mat-chip-option>
+                    <mat-icon>visibility</mat-icon>
+                    {{ filteredProperties.length }} Visible{{ filteredProperties.length !== 1 ? 's' : '' }}
+                </mat-chip-option>
+            </mat-chip-listbox>
+        </div>
+    </div>
+
+    <!-- Filtros mejorados -->
+    <mat-card class="filter-card" elevation="2">
+        <mat-card-header>
+            <mat-card-title>
+                <mat-icon>filter_list</mat-icon>
+                Filtros de búsqueda
+            </mat-card-title>
+            <div class="filter-actions">
+                <button mat-button (click)="clearFilters()" [disabled]="!hasActiveFilters()">
+                    <mat-icon>clear</mat-icon>
+                    Limpiar
+                </button>
+            </div>
+        </mat-card-header>
+
+        <mat-card-content>
+            <form [formGroup]="filterForm" class="filter-form">
+                <!-- Búsqueda principal -->
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Buscar propiedades</mat-label>
+                    <input matInput formControlName="search" placeholder="Título, descripción, ubicación...">
+                    <mat-icon matPrefix>search</mat-icon>
+                    <button mat-icon-button matSuffix *ngIf="filterForm.get('search')?.value"
+                        (click)="filterForm.get('search')?.setValue('')">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+
+                <!-- Filtros en grid -->
+                <div class="filters-grid">
+                    <!-- Ubicaciones -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Ubicaciones</mat-label>
+                        <mat-select formControlName="location" multiple>
+                            <mat-option *ngFor="let location of allLocations" [value]="location">
+                                <mat-icon>location_on</mat-icon>
+                                {{ location }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>location_on</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Precio mínimo -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Precio mínimo</mat-label>
+                        <input matInput type="number" formControlName="minPrice" placeholder="0">
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Precio máximo -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Precio máximo</mat-label>
+                        <input matInput type="number" formControlName="maxPrice" placeholder="Sin límite">
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                    </mat-form-field>
+
+                    <!-- Tipo de propiedad (si existe en tu modelo) -->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Tipo de propiedad</mat-label>
+                        <mat-select formControlName="propertyType">
+                            <mat-option value="">Todos</mat-option>
+                            <mat-option value="casa">Casa</mat-option>
+                            <mat-option value="apartamento">Apartamento</mat-option>
+                            <mat-option value="local">Local comercial</mat-option>
+                            <mat-option value="oficina">Oficina</mat-option>
+                            <mat-option value="lote">Lote</mat-option>
+                        </mat-select>
+                        <mat-icon matPrefix>business</mat-icon>
+                    </mat-form-field>
+                </div>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Barra de acciones -->
+    <div class="action-bar">
+        <div class="view-options">
+            <mat-button-toggle-group formControlName="viewMode" aria-label="Modo de vista">
+                <mat-button-toggle value="grid">
+                    <mat-icon>view_module</mat-icon>
+                    Grid
+                </mat-button-toggle>
+                <mat-button-toggle value="list">
+                    <mat-icon>view_list</mat-icon>
+                    Lista
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+
+        <div class="action-buttons">
+            <button mat-stroked-button (click)="exportProperties()" [disabled]="filteredProperties.length === 0">
+                <mat-icon>download</mat-icon>
+                Exportar
+            </button>
+
+            <button mat-raised-button color="primary" routerLink="/dashboard/create" *ngIf="isAdmin">
+                <mat-icon>add</mat-icon>
+                Nueva Propiedad
+            </button>
+        </div>
+    </div>
+
+    <!-- Resultados -->
+    <div class="results-section">
+        <!-- Sin resultados -->
+        <div *ngIf="filteredProperties.length === 0" class="no-results">
+            <mat-icon class="no-results-icon">search_off</mat-icon>
+            <h3>No se encontraron propiedades</h3>
+            <p>Intenta ajustar los filtros de búsqueda</p>
+            <button mat-button color="primary" (click)="clearFilters()">
+                <mat-icon>refresh</mat-icon>
+                Limpiar filtros
+            </button>
+        </div>
+
+        <!-- Grid de propiedades -->
+        <div *ngIf="filteredProperties.length > 0" class="properties-grid" [class.list-view]="viewMode === 'list'">
+
+            <mat-card *ngFor="let property of filteredProperties; trackBy: trackByProperty" class="property-card"
+                [class.list-card]="viewMode === 'list'" elevation="3">
+
+                <!-- Contenido de la propiedad -->
+                <div class="property-content">
+                    <app-property-card [property]="property"></app-property-card>
+                </div>
+
+                <!-- Acciones -->
+                <mat-card-actions class="property-actions">
+                    <div class="action-buttons">
+                        <button mat-fab color="primary" [routerLink]="['/dashboard/view', property.id]"
+                            matTooltip="Ver detalles" matTooltipPosition="above">
+                            <mat-icon>visibility</mat-icon>
+                        </button>
+
+                        <button *ngIf="isAdmin" mat-fab color="accent" [routerLink]="['/dashboard/edit', property.id]"
+                            matTooltip="Editar propiedad" matTooltipPosition="above">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+
+                        <button *ngIf="isAdmin" mat-fab color="warn" (click)="confirmDelete(property)"
+                            matTooltip="Eliminar propiedad" matTooltipPosition="above">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+
+                    <!-- Información adicional -->
+                    <!-- <div class="property-meta">
+                        <mat-chip-listbox>
+                            <mat-chip-option *ngIf="property.featured" color="accent">
+                                <mat-icon>star</mat-icon>
+                                Destacada
+                            </mat-chip-option>
+                            <mat-chip-option>
+                                <mat-icon>calendar_today</mat-icon>
+                                {{ property.createdAt | date:'shortDate' }}
+                            </mat-chip-option>
+                        </mat-chip-listbox>
+                    </div> -->
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+
+    <!-- Paginación -->
+    <mat-paginator *ngIf="filteredProperties.length > 0" [length]="filteredProperties.length" [pageSize]="pageSize"
+        [pageSizeOptions]="[6, 12, 24, 48]" showFirstLastButtons>
+    </mat-paginator>
+</div>
+
+<!-- Loading spinner -->
+<div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando propiedades...</p>
+</div>

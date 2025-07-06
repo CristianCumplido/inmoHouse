@@ -1,0 +1,242 @@
+.header {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: #fff;
+}
+
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.025em;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-button {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.nav-button mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.user-menu-trigger {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.user-menu-trigger:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.user-menu-trigger[aria-expanded="true"] .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.register-button {
+  background: #fff;
+  color: #1976d2;
+  margin-left: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.register-button:hover {
+  background: #f5f5f5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-menu-button {
+  display: none;
+  color: #fff;
+  margin-left: 0.5rem;
+}
+
+/* Estilos para los menús */
+.user-menu .mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  min-height: 48px;
+  transition: all 0.3s ease;
+}
+
+.user-menu .mat-menu-item:hover {
+  background-color: rgba(25, 118, 210, 0.04);
+}
+
+.user-menu .mat-menu-item mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #666;
+}
+
+.logout-item {
+  color: #d32f2f;
+}
+
+.logout-item mat-icon {
+  color: #d32f2f;
+}
+
+.mobile-menu .mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  min-height: 48px;
+}
+
+.mobile-menu .mat-menu-item mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .nav-menu {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+  }
+
+  .nav-container {
+    padding: 0 0.5rem;
+  }
+
+  .logo-text {
+    font-size: 1.25rem;
+  }
+
+  .logo-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-section {
+    gap: 0.25rem;
+  }
+
+  .logo-text {
+    font-size: 1.125rem;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mat-menu-panel {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estilos para el estado activo de los enlaces */
+.nav-button.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+}
+
+/* Mejoras en la accesibilidad */
+.nav-button:focus,
+.user-menu-trigger:focus {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Estilos para el indicador de usuario logueado */
+.user-menu-trigger::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: #4caf50;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}

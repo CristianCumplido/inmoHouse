@@ -1,0 +1,96 @@
+<div class="reports-dashboard-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <h1 class="dashboard-title">
+                <mat-icon class="title-icon">analytics</mat-icon>
+                Centro de Informes y Análisis
+            </h1>
+            <div class="header-actions">
+                <button mat-button [matMenuTriggerFor]="exportMenu">
+                    <mat-icon>download</mat-icon>
+                    Exportar
+                </button>
+                <mat-menu #exportMenu="matMenu">
+                    <button mat-menu-item (click)="exportToPDF()">
+                        <mat-icon>picture_as_pdf</mat-icon>
+                        <span>Exportar a PDF</span>
+                    </button>
+                    <button mat-menu-item (click)="exportToExcel()">
+                        <mat-icon>table_chart</mat-icon>
+                        <span>Exportar a Excel</span>
+                    </button>
+                </mat-menu>
+
+                <button mat-button (click)="refreshData()">
+                    <mat-icon>refresh</mat-icon>
+                    Actualizar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Date Range Filter -->
+    <mat-card class="filter-card" elevation="2">
+        <mat-card-content>
+            <form [formGroup]="filterForm" class="filter-form">
+                <mat-form-field appearance="outline">
+                    <mat-label>Fecha de inicio</mat-label>
+                    <input matInput [matDatepicker]="startPicker" formControlName="startDate">
+                    <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startPicker></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Fecha de fin</mat-label>
+                    <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+                    <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Período</mat-label>
+                    <mat-select formControlName="period">
+                        <mat-option value="week">Última semana</mat-option>
+                        <mat-option value="month">Último mes</mat-option>
+                        <mat-option value="quarter">Último trimestre</mat-option>
+                        <mat-option value="year">Último año</mat-option>
+                        <mat-option value="custom">Personalizado</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" (click)="applyFilters()">
+                    <mat-icon>filter_list</mat-icon>
+                    Aplicar Filtros
+                </button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <!-- Navigation Tabs -->
+    <mat-card class="navigation-card" elevation="2">
+        <nav mat-tab-nav-bar>
+            <a mat-tab-link routerLink="/reports/analytics" routerLinkActive #analytics="routerLinkActive"
+                [active]="analytics.isActive">
+                <mat-icon>trending_up</mat-icon>
+                Análisis General
+            </a>
+            <a mat-tab-link routerLink="/reports/properties" routerLinkActive #properties="routerLinkActive"
+                [active]="properties.isActive">
+                <mat-icon>home</mat-icon>
+                Propiedades
+            </a>
+            <a mat-tab-link routerLink="/reports/users" routerLinkActive #users="routerLinkActive"
+                [active]="users.isActive">
+                <mat-icon>people</mat-icon>
+                Usuarios
+            </a>
+
+        </nav>
+    </mat-card>
+
+    <!-- Content Area -->
+    <div class="content-area">
+        <router-outlet></router-outlet>
+    </div>
+</div>

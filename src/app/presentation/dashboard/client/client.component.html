@@ -1,0 +1,115 @@
+<!-- client.component.html -->
+<div class="client-panel">
+    <div class="client-header">
+        <h1 class="client-title">Panel de Cliente</h1>
+        <p class="client-subtitle">Encuentra tu hogar ideal</p>
+    </div>
+
+    <div class="client-grid">
+        <div class="client-card featured">
+            <div class="card-icon">
+                <mat-icon>search</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Explorar Propiedades</h3>
+                <p>Descubre propiedades que se adapten a tus necesidades</p>
+            </div>
+            <div class="card-actions">
+                <button mat-raised-button color="primary" routerLink="/dashboard/">
+                    Ver Propiedades
+                </button>
+            </div>
+        </div>
+
+        <div class="client-card">
+            <div class="card-icon">
+                <mat-icon>favorite</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Mis Favoritos</h3>
+                <p>Propiedades que has guardado para revisar más tarde</p>
+            </div>
+            <div class="card-actions">
+                <button mat-raised-button color="accent" routerLink="/favorites">
+                    Ver Favoritos
+                </button>
+            </div>
+        </div>
+
+        <div class="client-card">
+            <div class="card-icon">
+                <mat-icon>history</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Historial de Búsquedas</h3>
+                <p>Revisa tus búsquedas anteriores y criterios</p>
+            </div>
+            <div class="card-actions">
+                <button mat-raised-button color="warn" routerLink="/search-history">
+                    Ver Historial
+                </button>
+            </div>
+        </div>
+
+        <div class="client-card">
+            <div class="card-icon">
+                <mat-icon>calendar_today</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Mis Citas</h3>
+                <p>Visitas programadas a propiedades de interés</p>
+            </div>
+            <div class="card-actions">
+                <button mat-stroked-button color="primary" routerLink="/my-appointments">
+                    Ver Citas
+                </button>
+            </div>
+        </div>
+
+        <div class="client-card">
+            <div class="card-icon">
+                <mat-icon>chat</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Mensajes</h3>
+                <p>Conversa con agentes y obtén información</p>
+            </div>
+            <div class="card-actions">
+                <button mat-stroked-button color="accent" routerLink="/messages">
+                    Ver Mensajes
+                </button>
+            </div>
+        </div>
+
+        <div class="client-card">
+            <div class="card-icon">
+                <mat-icon>account_circle</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Mi Perfil</h3>
+                <p>Actualiza tu información y preferencias</p>
+            </div>
+            <div class="card-actions">
+                <button mat-stroked-button color="warn" routerLink="/profile">
+                    Editar Perfil
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de acceso rápido -->
+    <div class="quick-actions">
+        <h3>Acceso Rápido</h3>
+        <div class="quick-buttons">
+            <button mat-fab color="primary" routerLink="/dashboard/" matTooltip="Buscar Propiedades">
+                <mat-icon>search</mat-icon>
+            </button>
+            <button mat-fab color="accent" routerLink="/favorites" matTooltip="Mis Favoritos">
+                <mat-icon>favorite</mat-icon>
+            </button>
+            <button mat-fab color="warn" routerLink="/contact-agent" matTooltip="Contactar Agente">
+                <mat-icon>support_agent</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>

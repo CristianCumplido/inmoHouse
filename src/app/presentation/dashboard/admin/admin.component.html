@@ -1,0 +1,70 @@
+<!-- admin.component.html -->
+<div class="admin-panel">
+    <div class="admin-header">
+        <h1 class="admin-title">Panel de Administrador</h1>
+        <p class="admin-subtitle">Gestiona tu aplicación desde aquí</p>
+    </div>
+
+    <div class="admin-grid">
+        <div class="admin-card">
+            <div class="card-icon">
+                <mat-icon>home</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Propiedades</h3>
+                <p>Administra todas las propiedades del sistema</p>
+            </div>
+            <div class="card-actions">
+                <button mat-raised-button color="primary" routerLink="/dashboard">
+                    Gestionar Propiedades
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="card-icon">
+                <mat-icon>people</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Usuarios</h3>
+                <p>Controla los usuarios y sus permisos</p>
+            </div>
+            <div class="card-actions">
+                <button mat-raised-button color="accent" routerLink="/user">
+                    Gestionar Usuarios
+                </button>
+            </div>
+        </div>
+
+        <!-- Puedes agregar más cards aquí -->
+        <div class="admin-card">
+            <div class="card-icon">
+                <mat-icon>analytics</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Reportes</h3>
+                <p>Visualiza estadísticas y métricas</p>
+            </div>
+            <div class="card-actions">
+                <button mat-raised-button color="warn" routerLink="/reports">
+                    Ver Reportes
+                </button>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="card-icon">
+                <mat-icon>settings</mat-icon>
+            </div>
+            <div class="card-content">
+                <h3>Configuración</h3>
+                <p>Ajusta las configuraciones del sistema</p>
+            </div>
+            <div class="card-actions">
+                <button mat-stroked-button color="primary" routerLink="/settings">
+                    Configurar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+<div class="auth-wrapper">
+    <!-- Imagen para desktop - solo visible en pantallas grandes -->
+    <div class="auth-image-section">
+        <img src="assets/images/login-banner.jpg" alt="Login Banner" class="auth-image">
+        <!-- Puedes agregar contenido adicional aquí como texto de bienvenida -->
+        <div class="welcome-text">
+            <h1>Bienvenido</h1>
+            <p>Accede a tu cuenta para continuar</p>
+        </div>
+    </div>
+
+    <!-- Formulario de autenticación -->
+    <div class="auth-form-section">
+        <div class="auth-container">
+            <h2>{{ isRegisterMode ? 'Registrarse' : 'Iniciar Sesión' }}</h2>
+
+            <div class="toggle-mode-container">
+                <p class="toggle-text">
+                    {{ isRegisterMode ? '¿Ya tienes una cuenta?' : '¿No tienes cuenta aún?' }}
+                </p>
+                <button mat-button color="primary" (click)="toggleMode()" class="toggle-btn">
+                    {{ isRegisterMode ? 'Inicia sesión aquí' : 'Regístrate aquí' }}
+                </button>
+            </div>
+
+            <!-- Formulario de Login -->
+            <form *ngIf="!isRegisterMode" [formGroup]="loginForm" (ngSubmit)="loginWithCredentials()">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" type="email" required>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput formControlName="password" type="password" required>
+                </mat-form-field>
+
+                <button mat-raised-button color="primary" type="submit" class="submit-btn">
+                    Iniciar sesión
+                </button>
+            </form>
+
+            <!-- Formulario de Registro -->
+            <form *ngIf="isRegisterMode" [formGroup]="registerForm" (ngSubmit)="registerWithCredentials()">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput formControlName="name" required>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput formControlName="email" type="email" required>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput formControlName="password" type="password" required>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Confirmar contraseña</mat-label>
+                    <input matInput formControlName="confirmPassword" type="password" required>
+                </mat-form-field>
+
+                <button mat-raised-button color="accent" type="submit" class="submit-btn">
+                    Registrarse
+                </button>
+            </form>
+
+            <div class="divider">O usa tu cuenta empresarial</div>
+
+            <button mat-stroked-button color="primary" (click)="loginWithAzure()" class="azure-btn">
+                Iniciar con cuenta corporativa (Azure)
+            </button>
+        </div>
+    </div>
+</div>

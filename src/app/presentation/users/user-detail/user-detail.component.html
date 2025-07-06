@@ -1,0 +1,172 @@
+<div class="user-detail-container" *ngIf="user">
+    <!-- Header Card -->
+    <mat-card class="header-card">
+        <mat-card-header>
+            <div mat-card-avatar class="user-avatar">
+                <img *ngIf="user.photo; else defaultAvatar" [src]="user.photo" [alt]="user.name">
+                <ng-template #defaultAvatar>
+                    <mat-icon>person</mat-icon>
+                </ng-template>
+            </div>
+            <mat-card-title>{{ user.name }}</mat-card-title>
+            <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+            <div class="header-actions">
+                <button mat-icon-button (click)="goBack()" matTooltip="Volver">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+                <button *ngIf="canEdit" mat-icon-button [routerLink]="['/user/edit', user.id]"
+                    matTooltip="Editar usuario">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
+        </mat-card-header>
+    </mat-card>
+
+    <!-- User Information Cards -->
+    <div class="info-grid">
+        <!-- Basic Information -->
+        <mat-card class="info-card">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>info</mat-icon>
+                    Información Básica
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="info-row">
+                    <mat-icon class="info-icon">badge</mat-icon>
+                    <div class="info-content">
+                        <span class="info-label">Nombre completo</span>
+                        <span class="info-value">{{ user.name }}</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <mat-icon class="info-icon">email</mat-icon>
+                    <div class="info-content">
+                        <span class="info-label">Correo electrónico</span>
+                        <span class="info-value">{{ user.email }}</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <mat-icon class="info-icon">{{ getRoleIcon(user.role) }}</mat-icon>
+                    <div class="info-content">
+                        <span class="info-label">Rol</span>
+                        <mat-chip-listbox class="role-chip-inline">
+                            <mat-chip-option [selected]="true" [color]="getRoleColor(user.role)">
+                                {{ user.role }}
+                            </mat-chip-option>
+                        </mat-chip-listbox>
+                    </div>
+                </div>
+
+                <div class="info-row" *ngIf="user.phone">
+                    <mat-icon class="info-icon">phone</mat-icon>
+                    <div class="info-content">
+                        <span class="info-label">Teléfono</span>
+                        <span class="info-value">{{ user.phone }}</span>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Additional Information -->
+        <mat-card class="info-card">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>more_horiz</mat-icon>
+                    Información Adicional
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="info-row" *ngIf="user.address">
+                    <mat-icon class="info-icon">location_on</mat-icon>
+                    <div class="info-content">
+                        <span class="info-label">Dirección</span>
+                        <span class="info-value">{{ user.address }}</span>
+                    </div>
+                </div>
+
+                <div class="info-row" *ngIf="user.birthDate">
+                    <mat-icon class="info-icon">cake</mat-icon>
+                    <div class="info-content">
+                        <span class="info-label">Fecha de nacimiento</span>
+                        <span class="info-value">{{ user.birthDate | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <mat-icon class="info-icon">{{ user.isActive ? 'check_circle' : 'cancel' }}</mat-icon>
+                    <div class="info-content">
+                        <span class="info-label">Estado</span>
+                        <mat-chip-listbox class="status-chip-inline">
+                            <mat-chip-option [selected]="true" [color]="user.isActive ? 'primary' : 'warn'">
+                                {{ user.isActive ? 'Activo' : 'Inactivo' }}
+                            </mat-chip-option>
+                        </mat-chip-listbox>
+                    </div>
+                </div>
+
+                <div class="info-row" *ngIf="user.createdAt">
+                    <mat-icon class="info-icon">schedule</mat-icon>
+                    <div class="info-content">
+                        <span class="info-label">Fecha de registro</span>
+                        <span class="info-value">{{ user.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-section">
+        <mat-card class="actions-card">
+            <mat-card-content>
+                <div class="actions-buttons">
+                    <button mat-raised-button color="primary" [routerLink]="['/user/list']">
+                        <mat-icon>list</mat-icon>
+                        Ver todos los usuarios
+                    </button>
+                    <button *ngIf="canEdit" mat-raised-button color="accent" [routerLink]="['/user/edit', user.id]">
+                        <mat-icon>edit</mat-icon>
+                        Editar usuario
+                    </button>
+                    <button *ngIf="canDelete" mat-raised-button color="warn" (click)="confirmDelete()">
+                        <mat-icon>delete</mat-icon>
+                        Eliminar usuario
+                    </button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="!user && !loading" class="loading-container">
+    <mat-card class="loading-card">
+        <mat-card-content>
+            <div class="loading-content">
+                <mat-spinner diameter="50"></mat-spinner>
+                <p>Cargando información del usuario...</p>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<!-- Error State -->
+<div *ngIf="!user && error" class="error-container">
+    <mat-card class="error-card">
+        <mat-card-content>
+            <div class="error-content">
+                <mat-icon class="error-icon">error</mat-icon>
+                <h3>Error al cargar usuario</h3>
+                <p>{{ error }}</p>
+                <button mat-raised-button color="primary" (click)="retry()">
+                    <mat-icon>refresh</mat-icon>
+                    Reintentar
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,237 @@
+<div class="property-detail-container" *ngIf="property; else loadingTemplate">
+    <!-- Header con navegación -->
+    <div class="header-section">
+        <button mat-icon-button (click)="goBack()" matTooltip="Volver al listado">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="header-actions">
+            <button mat-button color="primary" (click)="shareProperty()">
+                <mat-icon>share</mat-icon>
+                Compartir
+            </button>
+            <button mat-button color="accent" (click)="addToFavorites()" *ngIf="!isFavorite">
+                <mat-icon>favorite_border</mat-icon>
+                Favoritos
+            </button>
+            <button mat-button color="warn" (click)="removeFromFavorites()" *ngIf="isFavorite">
+                <mat-icon>favorite</mat-icon>
+                En favoritos
+            </button>
+        </div>
+    </div>
+
+    <!-- Imagen principal -->
+    <div class="image-section">
+        <div class="main-image">
+            <img [src]="property.imageUrl" [alt]="property.title" (error)="onImageError($event)" class="property-image">
+
+            <!-- Overlay con información clave -->
+            <div class="image-overlay">
+                <div class="price-tag">
+                    <mat-icon>attach_money</mat-icon>
+                    <span class="price">{{ property.price | currency:'COP':'symbol':'1.0-0' }}</span>
+                </div>
+
+                <div class="property-type-chip" *ngIf="property.propertyType">
+                    <mat-chip-listbox>
+                        <mat-chip-option>{{ property.propertyType }}</mat-chip-option>
+                    </mat-chip-listbox>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información principal -->
+    <div class="content-section">
+        <!-- Título y ubicación -->
+        <mat-card class="title-card" elevation="2">
+            <mat-card-content>
+                <h1 class="property-title">{{ property.title }}</h1>
+                <div class="location-info">
+                    <mat-icon class="location-icon">location_on</mat-icon>
+                    <span class="location-text">{{ property.location }}</span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Características principales -->
+        <mat-card class="features-card" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>info</mat-icon>
+                    Características principales
+                </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="features-grid">
+                    <!-- Área -->
+                    <div class="feature-item">
+                        <mat-icon class="feature-icon">square_foot</mat-icon>
+                        <div class="feature-info">
+                            <span class="feature-value">{{ property.area }}</span>
+                            <span class="feature-label">m² construidos</span>
+                        </div>
+                    </div>
+
+                    <!-- Habitaciones -->
+                    <div class="feature-item">
+                        <mat-icon class="feature-icon">bed</mat-icon>
+                        <div class="feature-info">
+                            <span class="feature-value">{{ property.bedrooms }}</span>
+                            <span class="feature-label">{{ property.bedrooms === 1 ? 'Habitación' : 'Habitaciones'
+                                }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Baños -->
+                    <div class="feature-item">
+                        <mat-icon class="feature-icon">bathtub</mat-icon>
+                        <div class="feature-info">
+                            <span class="feature-value">{{ property.bathrooms }}</span>
+                            <span class="feature-label">{{ property.bathrooms === 1 ? 'Baño' : 'Baños' }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Parqueaderos -->
+                    <div class="feature-item">
+                        <mat-icon class="feature-icon">local_parking</mat-icon>
+                        <div class="feature-info">
+                            <span class="feature-value">{{ property.parking }}</span>
+                            <span class="feature-label">{{ property.parking === 1 ? 'Parqueadero' : 'Parqueaderos'
+                                }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Métricas adicionales -->
+                <mat-divider class="divider"></mat-divider>
+
+                <div class="metrics-section">
+                    <h3 class="metrics-title">Métricas de la propiedad</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value">{{ getPricePerSquareMeter() | currency:'COP':'symbol':'1.0-0' }}
+                            </div>
+                            <div class="metric-label">Precio por m²</div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-value">{{ getAreaPerBedroom() | number:'1.0-0' }} m²</div>
+                            <div class="metric-label">m² por habitación</div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-value">{{ property.area }}</div>
+                            <div class="metric-label">Área total</div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Descripción (si existe) -->
+        <mat-card class="description-card" elevation="2" *ngIf="hasDescription()">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>description</mat-icon>
+                    Descripción
+                </mat-card-title>
+            </mat-card-header>
+
+            <!-- <mat-card-content>
+                <p class="description-text">{{ property.description }}</p>
+            </mat-card-content> -->
+        </mat-card>
+
+        <!-- Acciones principales -->
+        <mat-card class="actions-card" elevation="2">
+            <mat-card-content>
+                <div class="action-buttons">
+                    <button mat-raised-button color="primary" class="contact-button" (click)="contactAgent()">
+                        <mat-icon>phone</mat-icon>
+                        Contactar agente
+                    </button>
+
+                    <button mat-raised-button color="accent" class="schedule-button" (click)="scheduleVisit()">
+                        <mat-icon>event</mat-icon>
+                        Programar visita
+                    </button>
+
+                    <!-- <button mat-stroked-button color="primary" class="calculate-button"
+                        (click)="openMortgageCalculator()">
+                        <mat-icon>calculate</mat-icon>
+                        Calcular hipoteca
+                    </button> -->
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Información adicional -->
+        <mat-card class="additional-info-card" elevation="2">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon>more_horiz</mat-icon>
+                    Información adicional
+                </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="info-list">
+                    <div class="info-item">
+                        <mat-icon>calendar_today</mat-icon>
+                        <span>Publicado: {{ getPublishedDate() | date:'longDate' }}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <mat-icon>visibility</mat-icon>
+                        <span>Código: {{ property.id }}</span>
+                    </div>
+
+                    <div class="info-item" *ngIf="property.propertyType">
+                        <mat-icon>business</mat-icon>
+                        <span>Tipo: {{ property.propertyType }}</span>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<!-- Loading template -->
+<ng-template #loadingTemplate>
+    <div class="loading-container">
+        <mat-card class="loading-card">
+            <mat-card-content>
+                <div class="loading-content">
+                    <mat-spinner diameter="60"></mat-spinner>
+                    <h3>Cargando propiedad...</h3>
+                    <p>Por favor espera mientras obtenemos la información</p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</ng-template>
+
+<!-- Error template -->
+<div class="error-container" *ngIf="error">
+    <mat-card class="error-card">
+        <mat-card-content>
+            <div class="error-content">
+                <mat-icon class="error-icon">error_outline</mat-icon>
+                <h3>Error al cargar la propiedad</h3>
+                <p>{{ error }}</p>
+                <div class="error-actions">
+                    <button mat-raised-button color="primary" (click)="retry()">
+                        <mat-icon>refresh</mat-icon>
+                        Reintentar
+                    </button>
+                    <button mat-button (click)="goBack()">
+                        <mat-icon>arrow_back</mat-icon>
+                        Volver al listado
+                    </button>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
