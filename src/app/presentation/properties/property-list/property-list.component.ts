@@ -110,7 +110,8 @@ export class PropertyListComponent implements OnInit, OnDestroy {
       .getAll()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (properties) => {
+        next: (properties: any) => {
+          console.log('Properties loaded:', properties);
           this.allProperties = properties;
           this.properties = properties;
           this.applyFilters();

@@ -14,7 +14,7 @@ export class HeaderComponent {
   router = inject(Router);
 
   logout() {
-    this.authService.logout();
+    // this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

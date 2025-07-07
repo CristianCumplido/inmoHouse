@@ -22,7 +22,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { ConfirmDeleteDialogComponent } from './shared/confirm-delete-dialog/confirm-delete-dialog.component';
 import { HttpClientModule } from '@angular/common/http'; // ← Agregar esta importación
-
+import { httpInterceptorProviders } from './core/interceptors';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 // Configuración de MSAL
 const msalConfig = {
   auth: {
@@ -55,6 +56,7 @@ const msalConfig = {
     HttpClientModule,
     MatDividerModule,
     MatDialogModule,
+    MatProgressBarModule,
     MsalModule.forRoot(
       new PublicClientApplication(msalConfig),
       {
@@ -71,7 +73,7 @@ const msalConfig = {
       }
     ),
   ],
-  providers: [MsalService, MsalGuard],
+  providers: [MsalService, MsalGuard, httpInterceptorProviders],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

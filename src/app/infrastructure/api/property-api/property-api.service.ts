@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
 import { Property } from '../../../core/models/property.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap, map, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PropertyApiService {
+  constructor(private http: HttpClient) {}
+  private baseUrl = 'http://localhost:3000/api/v1';
+  private Properties: Property[] = [];
   private mockProperties: Property[] = [
     {
       id: '1',
@@ -102,29 +106,55 @@ export class PropertyApiService {
       parking: 3,
     },
   ];
-  getAll() {
-    return of(this.mockProperties);
+  getAll(): Observable<Property[]> {
+    return this.http
+      .get<{ data: Property[] }>(`${this.baseUrl}/properties`)
+      .pipe(
+        tap((res) => {
+          this.Properties = res.data; // ✅ asignación aquí
+        }),
+        map((res) => res.data)
+      );
   }
 
   getById(id: string) {
-    const found = this.mockProperties.find((p) => p.id === id);
+    const found = this.Properties.find((p) => p.id === id);
     return of(found!);
   }
 
   create(property: Property) {
-    property.id = crypto.randomUUID();
-    this.mockProperties.push(property);
-    return of(property);
+    // property.id = crypto.randomUUID();
+    // this.mockProperties.push(property);
+    return this.http.post<Property>(`${this.baseUrl}/properties`, property);
   }
 
-  update(id: string, property: Property) {
-    const idx = this.mockProperties.findIndex((p) => p.id === id);
-    this.mockProperties[idx] = { ...property, id };
-    return of(this.mockProperties[idx]);
+  update(id: string, property: Property): Observable<Property> {
+    return this.http
+      .put<{ data: Property }>(`${this.baseUrl}/properties/${id}`, property)
+      .pipe(
+        tap((res) => {
+          // Opcional: actualizas el array local si quieres
+          const idx = this.Properties.findIndex((p) => p.id === id);
+          if (idx !== -1) {
+            this.Properties[idx] = res.data;
+          }
+        }),
+        map((res) => res.data)
+      );
   }
 
-  delete(id: string) {
-    this.mockProperties = this.mockProperties.filter((p) => p.id !== id);
-    return of();
+  delete(id: string): Observable<any> {
+    return this.http
+      .delete<{ data: Property }>(`${this.baseUrl}/properties/${id}`)
+      .pipe(
+        tap((res) => {
+          // Opcional: actualizas el array local si quieres
+          const idx = this.Properties.findIndex((p) => p.id === id);
+          if (idx !== -1) {
+            this.Properties[idx] = res.data;
+          }
+        }),
+        map((res) => res.data)
+      );
   }
 }

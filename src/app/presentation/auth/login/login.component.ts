@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
+import { AuthService } from 'src/app/application/services/auth/auth.service';
 import { RoleService } from 'src/app/application/services/role/role.service';
 import { UserRole } from 'src/app/core/models/roles.enum';
 
@@ -12,6 +14,7 @@ import { UserRole } from 'src/app/core/models/roles.enum';
 })
 export class LoginComponent {
   isRegisterMode = false;
+  private authService = inject(AuthService);
 
   loginForm: FormGroup;
   registerForm: FormGroup;
@@ -20,7 +23,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private msalService: MsalService,
     private role: RoleService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -47,14 +51,52 @@ export class LoginComponent {
         id: '1',
         name: 'Cristian Cumplido',
         email: email,
-        role: UserRole.ADMIN, // Simulando que es un agente
+        role: UserRole.ADMIN,
       });
-      this.router.navigate(['./admin']);
-
+      // this.router.navigate(['./admin']);
+      const user = {
+        email: email,
+        password: password,
+      };
+      this.authService.logout(user).subscribe({
+        next: (response: any) => {
+          // console.log('Usuario Logeado:', response);
+          let data = response.data;
+          console.log('Datos del usuario:', data.user.role);
+          this.role.setUser({
+            id: data.user.id,
+            name: data.user.name,
+            email: data.user.email,
+            role: data.user.role,
+          });
+          sessionStorage.setItem('token', data.token);
+          if (data.user.role == 'Cliente') {
+            this.router.navigate(['./client']);
+          } else if (data.user.role == 'Agente') {
+            this.router.navigate(['./agent']);
+          } else if (data.user.role == 'Administrador') {
+            this.router.navigate(['./admin']);
+          }
+        },
+        error: (error) => {
+          this.mostrarNotificacion(
+            'Inicio de sesión fallido. Verifica tu correo y contraseña.',
+            5000
+          );
+          console.error('Error en el loguear:', error);
+        },
+      });
       // Aquí conectas con backend para login manual
     }
   }
-
+  mostrarNotificacion(message: string, duration: number = 5000) {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: duration, // Duración en milisegundos
+      verticalPosition: 'top', // 'bottom' | 'top'
+      horizontalPosition: 'right', // 'start' | 'center' | 'end' | 'left' | 'right'
+      panelClass: ['custom-snackbar'], // clase CSS personalizada (opcional)
+    });
+  }
   registerWithCredentials() {
     if (this.registerForm.valid) {
       const { name, email, password, confirmPassword } =
@@ -64,7 +106,31 @@ export class LoginComponent {
         return;
       }
       console.log('Registro manual:', name, email);
+      const newUser = {
+        name: name,
+        email: email,
+        password: password,
+        role: UserRole.CLIENT,
+        phone: '573001234567',
+      };
       // Aquí conectas con backend para registrar
+      this.authService.register(newUser).subscribe({
+        next: (response) => {
+          this.registerForm.reset();
+          console.log('Usuario registrado:', response);
+          this.mostrarNotificacion(
+            'Registro exitoso. Ahora puedes iniciar sesión.',
+            5000
+          );
+        },
+        error: (error) => {
+          this.mostrarNotificacion(
+            'Registro Fallido. Verifica la información e intenta nuevamente.',
+            5000
+          );
+          console.error('Error en el registro:', error);
+        },
+      });
     }
   }
 

@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoleService } from 'src/app/application/services/role/role.service';
 import { UserService } from 'src/app/application/services/user/user.service';
@@ -22,6 +23,8 @@ export class UserFormComponent implements OnInit {
   private router = inject(Router);
   private userService = inject(UserService);
   private roleService = inject(RoleService);
+  private snackBar = inject(MatSnackBar);
+
   isEdit = false;
   userId: string | null = null;
 
@@ -53,12 +56,14 @@ export class UserFormComponent implements OnInit {
         .update(this.userId!, { id: this.userId!, ...this.form.value } as any)
         .subscribe(() => {
           this.router.navigate(['/user']);
+          this.showInfoMessage('Usuario actualizado correctamente');
         });
     } else {
       this.userService
         .create({ id: this.generateId(), ...this.form.value } as any)
         .subscribe(() => {
           this.router.navigate(['/user']);
+          this.showInfoMessage('Usuario creado correctamente');
         });
     }
   }
@@ -78,5 +83,13 @@ export class UserFormComponent implements OnInit {
 
   private generateId(): string {
     return Math.random().toString(36).substr(2, 9);
+  }
+  private showInfoMessage(message: string): void {
+    this.snackBar.open(message, 'Cerrar', {
+      duration: 4000,
+      panelClass: ['info-snackbar'],
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
   }
 }

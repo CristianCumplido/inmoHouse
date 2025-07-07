@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { UserRole } from 'src/app/core/models/roles.enum';
 import { User } from 'src/app/core/models/user.model';
 
@@ -6,28 +8,32 @@ import { User } from 'src/app/core/models/user.model';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor() {}
-
-  logout() {
-    // Implement logout logic here, such as clearing tokens or user data
-    console.log('User logged out');
-  }
-  isLoggedIn(): boolean {
-    // Replace this logic with your actual authentication check
-    // return !!localStorage.getItem('token');
-    return true;
-  }
+  private baseUrl = 'http://localhost:3000/api/v1/auth';
 
   private currentUser: User | null = null;
 
-  // Add this method to return the current user
+  constructor(private http: HttpClient) {}
+
+  logout(userData: { email: string; password: string }) {
+    return this.http.post(`${this.baseUrl}/login`, userData);
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.currentUser;
+  }
+
   getUser(): User | null {
-    // return this.currentUser;
-    return {
-      id: '1',
-      name: 'Cristian Cumplido',
-      email: 'smcumpli@gmail.com',
-      role: UserRole.ADMIN, // Cast to UserRole or use the correct enum value
-    };
+    return this.currentUser;
+  }
+
+  // ✅ Método para registrar un usuario
+  register(userData: {
+    name: string;
+    email: string;
+    password: string;
+    role: UserRole;
+    phone: string;
+  }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/register`, userData);
   }
 }

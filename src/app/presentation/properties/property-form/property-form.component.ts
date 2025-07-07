@@ -105,7 +105,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
       location: ['', [Validators.required]],
       imageUrl: [
         '',
-        [Validators.pattern(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i)],
+        // [Validators.pattern(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i)],
       ],
       area: ['', [Validators.required, Validators.min(1)]],
       bedrooms: ['', [Validators.required]],
@@ -155,6 +155,7 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     if (this.form.invalid) {
       this.markFormGroupTouched();
       this.showErrorMessage('Por favor completa todos los campos requeridos');
+
       return;
     }
 

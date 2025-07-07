@@ -1,5 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { UserRole } from 'src/app/core/models/roles.enum';
 import { User } from 'src/app/core/models/user.model';
 
@@ -7,6 +8,9 @@ import { User } from 'src/app/core/models/user.model';
   providedIn: 'root',
 })
 export class UserApiService {
+  constructor(private http: HttpClient) {}
+  private baseUrl = 'http://localhost:3000/api/v1';
+  private Users: User[] = [];
   private mockUsers: User[] = [
     { id: '1', name: 'Ana Admin', email: 'ana@inmo.com', role: UserRole.ADMIN },
     {
@@ -23,28 +27,56 @@ export class UserApiService {
     },
   ];
 
-  getAll() {
-    return of(this.mockUsers);
+  getAll(): Observable<User[]> {
+    return this.http.get<{ data: User[] }>(`${this.baseUrl}/users`).pipe(
+      tap((res) => {
+        this.Users = res.data; // ✅ asignación aquí
+      }),
+      map((res) => res.data)
+    );
   }
 
   getById(id: string) {
-    return of(this.mockUsers.find((u) => u.id === id)!);
+    return of(this.Users.find((u) => u.id === id)!);
   }
 
   create(user: User) {
-    user.id = crypto.randomUUID();
-    this.mockUsers.push(user);
-    return of(user);
+    // user.id = crypto.randomUUID();
+    // this.mockUsers.push(user);
+    // return of(user);
+    return this.http.post<User>(`${this.baseUrl}/users`, user);
   }
 
-  update(id: string, user: User) {
-    const index = this.mockUsers.findIndex((u) => u.id === id);
-    this.mockUsers[index] = { ...user, id };
-    return of(this.mockUsers[index]);
+  update(id: string, user: User): Observable<User> {
+    return this.http
+      .put<{ data: User }>(`${this.baseUrl}/users/${id}`, user)
+      .pipe(
+        tap((res) => {
+          // Opcional: actualizas el array local si quieres
+          const idx = this.Users.findIndex((p) => p.id === id);
+          if (idx !== -1) {
+            this.Users[idx] = res.data;
+          }
+        }),
+        map((res) => res.data)
+      );
   }
 
-  delete(id: string) {
-    this.mockUsers = this.mockUsers.filter((u) => u.id !== id);
-    return of();
+  // delete(id: string) {
+  //   this.mockUsers = this.mockUsers.filter((u) => u.id !== id);
+  //   return of();
+  // }
+
+  delete(id: string): Observable<any> {
+    return this.http.delete<{ data: User }>(`${this.baseUrl}/users/${id}`).pipe(
+      tap((res) => {
+        // Opcional: actualizas el array local si quieres
+        const idx = this.Users.findIndex((p) => p.id === id);
+        if (idx !== -1) {
+          this.Users[idx] = res.data;
+        }
+      }),
+      map((res) => res.data)
+    );
   }
 }
