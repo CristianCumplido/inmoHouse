@@ -26,6 +26,11 @@ export class AuthService {
     return this.currentUser;
   }
 
+  loginWithAzure(azureTokenReq: string) {
+    return this.http.post(`${this.baseUrl}/azure-login`, {
+      azureToken: azureTokenReq,
+    });
+  }
   // ✅ Método para registrar un usuario
   register(userData: {
     name: string;

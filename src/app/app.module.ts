@@ -4,38 +4,29 @@ import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
-// Importaciones de MSAL
-import {
-  MsalModule,
-  MsalService,
-  MsalGuard,
-  MsalInterceptor,
-} from '@azure/msal-angular';
-import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
-import { HeaderComponent } from './shared/layout/header/header.component';
-import { FooterComponent } from './shared/layout/footer/footer.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
-import { ConfirmDeleteDialogComponent } from './shared/confirm-delete-dialog/confirm-delete-dialog.component';
-import { HttpClientModule } from '@angular/common/http'; // ← Agregar esta importación
-import { httpInterceptorProviders } from './core/interceptors';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-// Configuración de MSAL
-const msalConfig = {
-  auth: {
-    clientId: 'tu-client-id-aqui', // Reemplaza con tu Client ID
-    authority: 'https://login.microsoftonline.com/common',
-    redirectUri: 'http://localhost:4200',
-  },
-  cache: {
-    cacheLocation: 'localStorage',
-    storeAuthStateInCookie: false,
-  },
-};
+
+import {
+  MsalService,
+  MsalGuard,
+  MsalBroadcastService,
+  MsalModule,
+} from '@azure/msal-angular';
+
+import { HeaderComponent } from './shared/layout/header/header.component';
+import { FooterComponent } from './shared/layout/footer/footer.component';
+import { ConfirmDeleteDialogComponent } from './shared/confirm-delete-dialog/confirm-delete-dialog.component';
+import { httpInterceptorProviders } from './core/interceptors';
+import { msalConfig } from './msal.config';
+import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
 
 @NgModule({
   declarations: [
@@ -49,31 +40,21 @@ const msalConfig = {
     BrowserAnimationsModule,
     RouterModule,
     AppRoutingModule,
+    HttpClientModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    HttpClientModule,
     MatDividerModule,
     MatDialogModule,
     MatProgressBarModule,
-    MsalModule.forRoot(
-      new PublicClientApplication(msalConfig),
-      {
-        interactionType: InteractionType.Redirect,
-        authRequest: {
-          scopes: ['user.read'],
-        },
-      },
-      {
-        interactionType: InteractionType.Redirect,
-        protectedResourceMap: new Map([
-          ['https://graph.microsoft.com/v1.0/me', ['user.read']],
-        ]),
-      }
-    ),
   ],
-  providers: [MsalService, MsalGuard, httpInterceptorProviders],
+  providers: [
+    MsalService,
+    MsalGuard,
+    MsalBroadcastService,
+    httpInterceptorProviders,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

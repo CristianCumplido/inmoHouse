@@ -6,6 +6,8 @@ import { MsalService } from '@azure/msal-angular';
 import { AuthService } from 'src/app/application/services/auth/auth.service';
 import { RoleService } from 'src/app/application/services/role/role.service';
 import { UserRole } from 'src/app/core/models/roles.enum';
+import { PublicClientApplication } from '@azure/msal-browser';
+import { loginRequest } from 'src/app/msal.config';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +44,14 @@ export class LoginComponent {
   toggleMode() {
     this.isRegisterMode = !this.isRegisterMode;
   }
-
+  ngOnInit() {
+    // Asegurarse de que MSAL esté inicializado
+    if (!this.msalService.instance.getActiveAccount()) {
+      this.msalService.instance.handleRedirectPromise().then(() => {
+        // Inicialización completada
+      });
+    }
+  }
   loginWithCredentials() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
@@ -134,7 +143,50 @@ export class LoginComponent {
     }
   }
 
-  loginWithAzure() {
-    this.msalService.loginRedirect();
+  async loginWithAzure() {
+    this.msalService.loginPopup(loginRequest).subscribe({
+      next: (result) => {
+        console.log('Login exitoso:', result);
+        this.authService.loginWithAzure(result.accessToken).subscribe({
+          next: (response: any) => {
+            console.log('Respuesta de Azure:', response);
+            console.log('Usuario Logeado con Azure:', response);
+            let data = response.data;
+            this.role.setUser({
+              id: data.user.id,
+              name: data.user.name,
+              email: data.user.email,
+              role: data.user.role,
+            });
+            sessionStorage.setItem('token', data.token);
+            if (data.user.role == 'Cliente') {
+              this.router.navigate(['./client']);
+            } else if (data.user.role == 'Agente') {
+              this.router.navigate(['./agent']);
+            } else if (data.user.role == 'Administrador') {
+              this.router.navigate(['./admin']);
+            }
+          },
+          error: (error) => {
+            this.mostrarNotificacion(
+              'Error al iniciar sesión con Azure. Inténtalo nuevamente.',
+              5000
+            );
+            console.error('Error en login con Azure:', error);
+          },
+        });
+      },
+      error: (error) => {
+        console.error('Error en login:', error);
+      },
+    });
+  }
+  isLoggedIn(): boolean {
+    return this.msalService.instance.getActiveAccount() !== null;
+  }
+
+  getUserName(): string {
+    const account = this.msalService.instance.getActiveAccount();
+    return account?.name || '';
   }
 }
