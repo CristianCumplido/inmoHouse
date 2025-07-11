@@ -130,13 +130,13 @@
 
         <!-- Mobile Menu Button -->
         <button mat-icon-button [matMenuTriggerFor]="mobileMenu" class="header__mobile-toggle" matTooltip="Menú"
-            matTooltipPosition="below">
+            matTooltipPosition="below" *ngIf="authService.isLoggedIn();">
             <mat-icon class="header__mobile-icon">menu</mat-icon>
         </button>
 
         <!-- Mobile Menu -->
         <mat-menu #mobileMenu="matMenu" class="header__mobile-menu">
-            <ng-container *ngIf="authService.isLoggedIn(); else guestMobileLinks">
+            <ng-container *ngIf="authService.isLoggedIn(); ">
                 <!-- Mobile User Info -->
                 <div class="header__mobile-user">
                     <div class="header__mobile-avatar">
@@ -198,7 +198,7 @@
                 </button>
             </ng-container>
 
-            <!-- Guest Mobile Links -->
+            <!-- Guest Mobile Links
             <ng-template #guestMobileLinks>
                 <div class="header__mobile-guest">
                     <div class="header__mobile-guest-header">
@@ -218,7 +218,7 @@
                         <span class="header__mobile-item-text">Registrarse</span>
                     </button>
                 </div>
-            </ng-template>
+            </ng-template> -->
         </mat-menu>
     </div>
 </mat-toolbar>
