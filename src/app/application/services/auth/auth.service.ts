@@ -3,19 +3,20 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { UserRole } from 'src/app/core/models/roles.enum';
 import { User } from 'src/app/core/models/user.model';
+import { environment } from 'src/app/environment/envoronment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:3000/api/v1/auth';
+  private baseUrl = environment.BASE_URL_API;
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
   constructor(private http: HttpClient) {}
 
   login(userData: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, userData).pipe(
+    return this.http.post(`${this.baseUrl}/auth/login`, userData).pipe(
       tap((user: any) => {
         this.currentUserSubject.next(user.data.user);
       })
@@ -34,7 +35,7 @@ export class AuthService {
 
   loginWithAzure(azureTokenReq: string) {
     return this.http
-      .post(`${this.baseUrl}/azure-login`, {
+      .post(`${this.baseUrl}/auth/azure-login`, {
         azureToken: azureTokenReq,
       })
       .pipe(
@@ -53,6 +54,6 @@ export class AuthService {
     role: UserRole;
     phone: string;
   }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register`, userData);
+    return this.http.post(`${this.baseUrl}/auth/register`, userData);
   }
 }

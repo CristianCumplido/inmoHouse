@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { Property } from '../../../core/models/property.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, map, of } from 'rxjs';
+import { environment } from 'src/app/environment/envoronment';
 
 @Injectable({ providedIn: 'root' })
 export class PropertyApiService {
   constructor(private http: HttpClient) {}
-  private baseUrl = 'http://localhost:3000/api/v1';
+  private baseUrl = environment.BASE_URL_API;
   private Properties: Property[] = [];
   private mockProperties: Property[] = [
     {

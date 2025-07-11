@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { map, Observable, of, tap } from 'rxjs';
 import { UserRole } from 'src/app/core/models/roles.enum';
 import { User } from 'src/app/core/models/user.model';
+import { environment } from 'src/app/environment/envoronment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserApiService {
   constructor(private http: HttpClient) {}
-  private baseUrl = 'http://localhost:3000/api/v1';
+  private baseUrl = environment.BASE_URL_API;
   private Users: User[] = [];
   private mockUsers: User[] = [
     { id: '1', name: 'Ana Admin', email: 'ana@inmo.com', role: UserRole.ADMIN },
