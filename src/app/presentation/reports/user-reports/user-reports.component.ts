@@ -138,7 +138,7 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe(() => {});
   }
 
-  private loadUsers(): void {
+  loadUsers(): void {
     this.loading = true;
 
     this.reportsService
@@ -281,7 +281,7 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private calculateSummary(): void {
+  calculateSummary(): void {
     const total = this.filteredUsers.length;
     const active = this.filteredUsers.filter(
       (u) => u.status === 'active'
@@ -310,7 +310,7 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     };
   }
 
-  private calculateRoleData(): void {
+  calculateRoleData(): void {
     const roleCounts = this.users.reduce((acc, user) => {
       acc[user.role] = (acc[user.role] || 0) + 1;
       return acc;
@@ -420,7 +420,7 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private createActivityChart(): void {
+  createActivityChart(): void {
     if (!this.activityChart?.nativeElement || !this.selectedUser) return;
 
     this.destroyChart('activity');
@@ -487,14 +487,14 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private destroyChart(chartName: string): void {
+  destroyChart(chartName: string): void {
     if (this.charts[chartName]) {
       this.charts[chartName].destroy();
       delete this.charts[chartName];
     }
   }
 
-  private destroyCharts(): void {
+  destroyCharts(): void {
     Object.keys(this.charts).forEach((chartName) => {
       this.destroyChart(chartName);
     });

@@ -103,7 +103,9 @@ describe('AuthService', () => {
       });
 
       // Assert
-      const req = httpMock.expectOne('http://localhost:3000/api/v1/auth/login');
+      const req = httpMock.expectOne(
+        'https://inmohouse-api.onrender.com/api/v1/auth/login'
+      );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(loginData);
 
@@ -132,7 +134,9 @@ describe('AuthService', () => {
       });
 
       // Assert
-      const req = httpMock.expectOne('http://localhost:3000/api/v1/auth/login');
+      const req = httpMock.expectOne(
+        'https://inmohouse-api.onrender.com/api/v1/auth/login'
+      );
       req.flush('Invalid credentials', errorResponse);
 
       expect(actualError).toBeDefined();
@@ -157,7 +161,9 @@ describe('AuthService', () => {
 
       service.login(loginData).subscribe();
 
-      const req = httpMock.expectOne('http://localhost:3000/api/v1/auth/login');
+      const req = httpMock.expectOne(
+        'https://inmohouse-api.onrender.com/api/v1/auth/login'
+      );
       req.flush(mockLoginResponse);
     });
   });
@@ -168,7 +174,9 @@ describe('AuthService', () => {
       service
         .login({ email: 'john@example.com', password: 'password123' })
         .subscribe();
-      const req = httpMock.expectOne('http://localhost:3000/api/v1/auth/login');
+      const req = httpMock.expectOne(
+        'https://inmohouse-api.onrender.com/api/v1/auth/login'
+      );
       req.flush(mockLoginResponse);
 
       expect(service.isLoggedIn()).toBeTruthy();
@@ -186,7 +194,9 @@ describe('AuthService', () => {
       service
         .login({ email: 'john@example.com', password: 'password123' })
         .subscribe();
-      const req = httpMock.expectOne('http://localhost:3000/api/v1/auth/login');
+      const req = httpMock.expectOne(
+        'https://inmohouse-api.onrender.com/api/v1/auth/login'
+      );
       req.flush(mockLoginResponse);
 
       let emissionCount = 0;
@@ -211,7 +221,9 @@ describe('AuthService', () => {
       service
         .login({ email: 'john@example.com', password: 'password123' })
         .subscribe();
-      const req = httpMock.expectOne('http://localhost:3000/api/v1/auth/login');
+      const req = httpMock.expectOne(
+        'https://inmohouse-api.onrender.com/api/v1/auth/login'
+      );
       req.flush(mockLoginResponse);
 
       // Act
@@ -236,7 +248,9 @@ describe('AuthService', () => {
       service
         .login({ email: 'john@example.com', password: 'password123' })
         .subscribe();
-      const req = httpMock.expectOne('http://localhost:3000/api/v1/auth/login');
+      const req = httpMock.expectOne(
+        'https://inmohouse-api.onrender.com/api/v1/auth/login'
+      );
       req.flush(mockLoginResponse);
 
       // Act
@@ -254,7 +268,9 @@ describe('AuthService', () => {
       service
         .login({ email: 'john@example.com', password: 'password123' })
         .subscribe();
-      const req = httpMock.expectOne('http://localhost:3000/api/v1/auth/login');
+      const req = httpMock.expectOne(
+        'https://inmohouse-api.onrender.com/api/v1/auth/login'
+      );
       req.flush(mockLoginResponse);
 
       // Act
@@ -288,7 +304,7 @@ describe('AuthService', () => {
 
       // Assert
       const req = httpMock.expectOne(
-        'http://localhost:3000/api/v1/auth/azure-login'
+        'https://inmohouse-api.onrender.com/api/v1/auth/azure-login'
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(expectedRequestBody);
@@ -309,7 +325,7 @@ describe('AuthService', () => {
 
       // Assert
       const req = httpMock.expectOne(
-        'http://localhost:3000/api/v1/auth/azure-login'
+        'https://inmohouse-api.onrender.com/api/v1/auth/azure-login'
       );
       req.flush(mockLoginResponse);
 
@@ -334,7 +350,7 @@ describe('AuthService', () => {
 
       // Assert
       const req = httpMock.expectOne(
-        'http://localhost:3000/api/v1/auth/azure-login'
+        'https://inmohouse-api.onrender.com/api/v1/auth/azure-login'
       );
       req.flush('Invalid Azure token', errorResponse);
 
@@ -360,7 +376,7 @@ describe('AuthService', () => {
       service.loginWithAzure(mockAzureToken).subscribe();
 
       const req = httpMock.expectOne(
-        'http://localhost:3000/api/v1/auth/azure-login'
+        'https://inmohouse-api.onrender.com/api/v1/auth/azure-login'
       );
       req.flush(mockLoginResponse);
     });
@@ -386,7 +402,7 @@ describe('AuthService', () => {
 
       // Assert
       const req = httpMock.expectOne(
-        'http://localhost:3000/api/v1/auth/register'
+        'https://inmohouse-api.onrender.com/api/v1/auth/register'
       );
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(mockRegisterData);
@@ -411,7 +427,7 @@ describe('AuthService', () => {
 
       // Assert
       const req = httpMock.expectOne(
-        'http://localhost:3000/api/v1/auth/register'
+        'https://inmohouse-api.onrender.com/api/v1/auth/register'
       );
       req.flush('Email already exists', errorResponse);
 
@@ -433,7 +449,7 @@ describe('AuthService', () => {
 
       // Assert
       const req = httpMock.expectOne(
-        'http://localhost:3000/api/v1/auth/register'
+        'https://inmohouse-api.onrender.com/api/v1/auth/register'
       );
       expect(req.request.body).toEqual(customRegisterData);
       expect(req.request.body.name).toBe('Custom User');
@@ -460,7 +476,9 @@ describe('AuthService', () => {
       });
 
       // Assert
-      const req = httpMock.expectOne('http://localhost:3000/api/v1/auth/login');
+      const req = httpMock.expectOne(
+        'https://inmohouse-api.onrender.com/api/v1/auth/login'
+      );
       req.error(new ErrorEvent('Network error'), { status: 0 });
 
       expect(actualError).toBeDefined();
@@ -480,7 +498,7 @@ describe('AuthService', () => {
 
       // Assert
       const req = httpMock.expectOne(
-        'http://localhost:3000/api/v1/auth/azure-login'
+        'https://inmohouse-api.onrender.com/api/v1/auth/azure-login'
       );
       req.error(new ErrorEvent('Server error'), { status: 500 });
 
@@ -510,7 +528,9 @@ describe('AuthService', () => {
       service
         .login({ email: 'john@example.com', password: 'password123' })
         .subscribe();
-      const req = httpMock.expectOne('http://localhost:3000/api/v1/auth/login');
+      const req = httpMock.expectOne(
+        'https://inmohouse-api.onrender.com/api/v1/auth/login'
+      );
       req.flush(mockLoginResponse);
 
       // Simular logout

@@ -27,6 +27,8 @@ import { ConfirmDeleteDialogComponent } from './shared/confirm-delete-dialog/con
 import { httpInterceptorProviders } from './core/interceptors';
 import { msalConfig } from './msal.config';
 import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,7 @@ import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
     HeaderComponent,
     FooterComponent,
     ConfirmDeleteDialogComponent,
+    LoadingSpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,6 +51,7 @@ import { PublicClientApplication, InteractionType } from '@azure/msal-browser';
     MatDividerModule,
     MatDialogModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     MsalService,

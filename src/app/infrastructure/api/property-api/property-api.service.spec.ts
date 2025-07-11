@@ -65,7 +65,7 @@ describe('PropertyApiService (Jest)', () => {
       // Assert
       expect(result).toEqual(mockProperties);
       expect(httpMock.get).toHaveBeenCalledWith(
-        'http://localhost:3000/api/v1/properties'
+        'https://inmohouse-api.onrender.com/api/v1/properties'
       );
       done();
     });
@@ -92,7 +92,7 @@ describe('PropertyApiService (Jest)', () => {
       // Assert
       expect(result).toEqual(newProperty);
       expect(httpMock.post).toHaveBeenCalledWith(
-        'http://localhost:3000/api/v1/properties',
+        'https://inmohouse-api.onrender.com/api/v1/properties',
         newProperty
       );
     });
@@ -114,7 +114,7 @@ describe('PropertyApiService (Jest)', () => {
       expect(res).toEqual(updatedProperty);
       expect((service as any).Properties[0].title).toBe('Casa Actualizada');
       expect(httpMock.put).toHaveBeenCalledWith(
-        'http://localhost:3000/api/v1/properties/1',
+        'https://inmohouse-api.onrender.com/api/v1/properties/1',
         updatedProperty
       );
     });
@@ -132,7 +132,7 @@ describe('PropertyApiService (Jest)', () => {
       // Assert
       expect(res).toEqual(updated);
       expect(httpMock.delete).toHaveBeenCalledWith(
-        'http://localhost:3000/api/v1/properties/1'
+        'https://inmohouse-api.onrender.com/api/v1/properties/1'
       );
     });
   });

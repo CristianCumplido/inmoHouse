@@ -55,7 +55,7 @@ describe('UserApiService (Jest)', () => {
       // Assert
       expect(res).toEqual(mockUsers);
       expect(httpMock.get).toHaveBeenCalledWith(
-        'http://localhost:3000/api/v1/users'
+        'https://inmohouse-api.onrender.com/api/v1/users'
       );
       done();
     });
@@ -83,7 +83,7 @@ describe('UserApiService (Jest)', () => {
       // Assert
       expect(res).toEqual(user);
       expect(httpMock.get).toHaveBeenCalledWith(
-        `http://localhost:3000/api/v1/users/${userId}`
+        `https://inmohouse-api.onrender.com/api/v1/users/${userId}`
       );
     });
   });
@@ -103,7 +103,7 @@ describe('UserApiService (Jest)', () => {
         // Assert
         expect(res).toEqual(response);
         expect(httpMock.patch).toHaveBeenCalledWith(
-          `http://localhost:3000/api/v1/users/${id}/password`,
+          `hhttps://inmohouse-api.onrender.com/api/v1/users/${id}/password`,
           { currentPassword, newPassword }
         );
       });
@@ -119,7 +119,7 @@ describe('UserApiService (Jest)', () => {
       // Assert
       expect(res).toEqual(newUser);
       expect(httpMock.post).toHaveBeenCalledWith(
-        'http://localhost:3000/api/v1/users',
+        'https://inmohouse-api.onrender.com/api/v1/users',
         newUser
       );
     });
@@ -138,7 +138,7 @@ describe('UserApiService (Jest)', () => {
       expect(res).toEqual(updatedUser);
       expect((service as any).Users[0].name).toBe('Ana Actualizada');
       expect(httpMock.put).toHaveBeenCalledWith(
-        'http://localhost:3000/api/v1/users/1',
+        'https://inmohouse-api.onrender.com/api/v1/users/1',
         updatedUser
       );
     });
@@ -156,7 +156,7 @@ describe('UserApiService (Jest)', () => {
       // Assert
       expect(res).toEqual(deletedUser);
       expect(httpMock.delete).toHaveBeenCalledWith(
-        'http://localhost:3000/api/v1/users/2'
+        'https://inmohouse-api.onrender.com/api/v1/users/2'
       );
     });
   });
