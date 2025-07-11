@@ -8,7 +8,7 @@ describe('AuthCallbackComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AuthCallbackComponent]
+      declarations: [AuthCallbackComponent],
     });
     fixture = TestBed.createComponent(AuthCallbackComponent);
     component = fixture.componentInstance;

@@ -17,7 +17,16 @@ export class UserService {
   getById(id: string): Observable<User> {
     return this.api.getById(id);
   }
-
+  getProfile(id: string): Observable<any> {
+    return this.api.getProfile(id);
+  }
+  changePassword(
+    id: string,
+    currentPassword: string,
+    newPassword: string
+  ): Observable<any> {
+    return this.api.changePassword(id, currentPassword, newPassword);
+  }
   create(user: User): Observable<User> {
     return this.api.create(user);
   }

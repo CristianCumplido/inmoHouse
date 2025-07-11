@@ -1,5 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
@@ -8,7 +13,7 @@ import { RoleService } from 'src/app/application/services/role/role.service';
 import { UserRole } from 'src/app/core/models/roles.enum';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { loginRequest } from 'src/app/msal.config';
-
+import { PasswordStrengthService } from 'src/app/application/services/password-strength/password-strength.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -17,7 +22,8 @@ import { loginRequest } from 'src/app/msal.config';
 export class LoginComponent {
   isRegisterMode = false;
   private authService = inject(AuthService);
-
+  hideNewPassword = true;
+  hideConfirmPassword = true;
   loginForm: FormGroup;
   registerForm: FormGroup;
 
@@ -33,12 +39,40 @@ export class LoginComponent {
       password: ['', [Validators.required]],
     });
 
-    this.registerForm = this.fb.group({
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-      confirmPassword: ['', [Validators.required]],
-    });
+    this.registerForm = this.fb.group(
+      {
+        name: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            this.passwordStrengthValidator,
+          ],
+        ],
+        confirmPassword: ['', [Validators.required]],
+      },
+      {
+        validators: this.passwordMatchValidator,
+      }
+    );
+  }
+  passwordStrengthValidator(
+    control: AbstractControl
+  ): { [key: string]: any } | null {
+    if (!control.value) return null;
+
+    const password = control.value;
+    const hasMinLength = password.length >= 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /[0-9]/.test(password);
+    const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+
+    const isValid = hasMinLength && hasUpperCase && hasLowerCase && hasNumbers;
+
+    return isValid ? null : { weakPassword: true };
   }
 
   toggleMode() {
@@ -52,26 +86,25 @@ export class LoginComponent {
       });
     }
   }
+  get password(): AbstractControl | null {
+    return this.registerForm.get('password');
+  }
+  get confirmPassword(): AbstractControl | null {
+    return this.registerForm.get('confirmPassword');
+  }
   loginWithCredentials() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-      console.log('Login manual:', email, password);
-      this.role.setUser({
-        id: '1',
-        name: 'Cristian Cumplido',
-        email: email,
-        role: UserRole.ADMIN,
-      });
+
       // this.router.navigate(['./admin']);
       const user = {
         email: email,
         password: password,
       };
-      this.authService.logout(user).subscribe({
+      this.authService.login(user).subscribe({
         next: (response: any) => {
           // console.log('Usuario Logeado:', response);
           let data = response.data;
-          console.log('Datos del usuario:', data.user.role);
           this.role.setUser({
             id: data.user.id,
             name: data.user.name,
@@ -106,6 +139,111 @@ export class LoginComponent {
       panelClass: ['custom-snackbar'], // clase CSS personalizada (opcional)
     });
   }
+
+  passwordMatchValidator(form: AbstractControl): { [key: string]: any } | null {
+    const newPassword = form.get('password');
+    const confirmPassword = form.get('confirmPassword');
+
+    if (!newPassword || !confirmPassword) return null;
+
+    if (newPassword.value !== confirmPassword.value) {
+      confirmPassword.setErrors({ mismatch: true });
+      return { mismatch: true };
+    }
+
+    // Clear mismatch error if passwords match
+    const errors = confirmPassword.errors;
+    if (errors) {
+      delete errors['mismatch'];
+      confirmPassword.setErrors(Object.keys(errors).length ? errors : null);
+    }
+
+    return null;
+  }
+
+  getPasswordStrength(password: string): number {
+    if (!password) return 0;
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    return strength;
+  }
+
+  getStrengthText(strength: number): string {
+    const strengthTexts = [
+      'Muy débil',
+      'Débil',
+      'Regular',
+      'Fuerte',
+      'Muy fuerte',
+    ];
+    return strengthTexts[Math.max(0, strength - 1)] || 'Muy débil';
+  }
+
+  getStrengthClass(strength: number): string {
+    const strengthClasses = [
+      'very-weak',
+      'weak',
+      'fair',
+      'strong',
+      'very-strong',
+    ];
+    return strengthClasses[Math.max(0, strength - 1)] || 'very-weak';
+  }
+
+  getStrengthValue(strength: number): number {
+    return (strength / 5) * 100;
+  }
+
+  // Password requirement checkers
+  hasMinLength(password: string): boolean {
+    return password ? password.length >= 8 : false;
+  }
+
+  hasUpperCase(password: string): boolean {
+    return password ? /[A-Z]/.test(password) && /[a-z]/.test(password) : false;
+  }
+
+  hasNumbers(password: string): boolean {
+    return password ? /[0-9]/.test(password) : false;
+  }
+
+  hasSpecialChar(password: string): boolean {
+    return password ? /[^A-Za-z0-9]/.test(password) : false;
+  }
+
+  onPasswordChange(): void {
+    // Trigger form validation when password changes
+    this.registerForm.get('confirmPassword')?.updateValueAndValidity();
+  }
+
+  // Error message methods
+
+  getNewPasswordErrorMessage(): string {
+    if (this.password?.hasError('required')) {
+      return 'La nueva contraseña es requerida';
+    }
+    if (this.password?.hasError('minlength')) {
+      return 'La contraseña debe tener al menos 8 caracteres';
+    }
+    if (this.password?.hasError('weakPassword')) {
+      return 'La contraseña debe incluir mayúsculas, minúsculas y números';
+    }
+    return '';
+  }
+
+  getConfirmPasswordErrorMessage(): string {
+    if (this.confirmPassword?.hasError('required')) {
+      return 'La confirmación es requerida';
+    }
+    if (this.confirmPassword?.hasError('mismatch')) {
+      return 'Las contraseñas no coinciden';
+    }
+    return '';
+  }
   registerWithCredentials() {
     if (this.registerForm.valid) {
       const { name, email, password, confirmPassword } =
@@ -114,7 +252,6 @@ export class LoginComponent {
         alert('Las contraseñas no coinciden');
         return;
       }
-      console.log('Registro manual:', name, email);
       const newUser = {
         name: name,
         email: email,
@@ -131,6 +268,7 @@ export class LoginComponent {
             'Registro exitoso. Ahora puedes iniciar sesión.',
             5000
           );
+          this.isRegisterMode = false;
         },
         error: (error) => {
           this.mostrarNotificacion(

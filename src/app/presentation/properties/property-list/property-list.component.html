@@ -95,26 +95,16 @@
 
     <!-- Barra de acciones -->
     <div class="action-bar">
-        <div class="view-options">
-            <mat-button-toggle-group formControlName="viewMode" aria-label="Modo de vista">
-                <mat-button-toggle value="grid">
-                    <mat-icon>view_module</mat-icon>
-                    Grid
-                </mat-button-toggle>
-                <mat-button-toggle value="list">
-                    <mat-icon>view_list</mat-icon>
-                    Lista
-                </mat-button-toggle>
-            </mat-button-toggle-group>
-        </div>
+
 
         <div class="action-buttons">
-            <button mat-stroked-button (click)="exportProperties()" [disabled]="filteredProperties.length === 0">
+            <button mat-stroked-button (click)="exportProperties()" [disabled]="filteredProperties.length === 0"
+                class="button">
                 <mat-icon>download</mat-icon>
                 Exportar
             </button>
 
-            <button mat-raised-button color="primary" routerLink="/dashboard/create" *ngIf="isAdmin">
+            <button mat-raised-button color="primary" routerLink="/dashboard/create" *ngIf="isAdmin" class="button">
                 <mat-icon>add</mat-icon>
                 Nueva Propiedad
             </button>

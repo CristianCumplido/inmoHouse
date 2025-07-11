@@ -1,0 +1,125 @@
+<div class="profile-edit">
+    <div class="profile-edit__container">
+        <mat-card class="profile-edit__card">
+            <mat-card-header class="profile-edit__header">
+                <mat-card-title>
+                    <mat-icon>edit</mat-icon>
+                    Editar Perfil
+                </mat-card-title>
+                <mat-card-subtitle>
+                    Actualiza tu información personal
+                </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content class="profile-edit__content">
+                <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-edit__form">
+                    <!-- Profile Image Upload -->
+                    <div class="profile-edit__image-section">
+                        <div class="profile-edit__current-image">
+                            <img *ngIf="currentImageUrl" [src]="currentImageUrl" alt="Profile" />
+                            <mat-icon *ngIf="!currentImageUrl">person</mat-icon>
+                        </div>
+                        <input type="file" #fileInput (change)="onImageSelected($event)" accept="image/*" hidden />
+                        <button type="button" mat-stroked-button (click)="fileInput.click()">
+                            <mat-icon>photo_camera</mat-icon>
+                            Cambiar foto
+                        </button>
+                    </div>
+
+                    <!-- Basic Information -->
+                    <div class="profile-edit__section">
+                        <h3>Información Básica</h3>
+
+                        <mat-form-field appearance="outline" class="profile-edit__field">
+                            <mat-label>Nombre completo</mat-label>
+                            <input matInput formControlName="name" placeholder="Tu nombre completo" />
+                            <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
+                                El nombre es requerido
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="profile-edit__field">
+                            <mat-label>Email</mat-label>
+                            <input matInput formControlName="email" type="email" placeholder="tu@email.com" />
+                            <mat-error *ngIf="profileForm.get('email')?.hasError('required')">
+                                El email es requerido
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+                                Ingresa un email válido
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="profile-edit__field">
+                            <mat-label>Teléfono</mat-label>
+                            <input matInput formControlName="phone" placeholder="+57 300 123 4567" />
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="profile-edit__field">
+                            <mat-label>Biografía</mat-label>
+                            <textarea matInput formControlName="bio" rows="3"
+                                placeholder="Cuéntanos sobre ti..."></textarea>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="profile-edit__field">
+                            <mat-label>Ubicación</mat-label>
+                            <input matInput formControlName="location" placeholder="Ciudad, País" />
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Professional Information -->
+                    <div class="profile-edit__section">
+                        <h3>Información Profesional</h3>
+
+                        <mat-form-field appearance="outline" class="profile-edit__field">
+                            <mat-label>Departamento</mat-label>
+                            <input matInput formControlName="department" placeholder="Desarrollo, Marketing, etc." />
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="profile-edit__section">
+                        <h3>Redes Sociales</h3>
+
+                        <mat-form-field appearance="outline" class="profile-edit__field">
+                            <mat-label>LinkedIn</mat-label>
+                            <input matInput formControlName="linkedin"
+                                placeholder="https://linkedin.com/in/tu-perfil" />
+                            <mat-icon matPrefix>link</mat-icon>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="profile-edit__field">
+                            <mat-label>Twitter</mat-label>
+                            <input matInput formControlName="twitter" placeholder="https://twitter.com/tu-usuario" />
+                            <mat-icon matPrefix>link</mat-icon>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="profile-edit__field">
+                            <mat-label>GitHub</mat-label>
+                            <input matInput formControlName="github" placeholder="https://github.com/tu-usuario" />
+                            <mat-icon matPrefix>link</mat-icon>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="profile-edit__field">
+                            <mat-label>Sitio Web</mat-label>
+                            <input matInput formControlName="website" placeholder="https://tu-sitio.com" />
+                            <mat-icon matPrefix>link</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </form>
+            </mat-card-content>
+
+            <mat-card-actions class="profile-edit__actions">
+                <button mat-button (click)="onCancel()">
+                    <mat-icon>close</mat-icon>
+                    Cancelar
+                </button>
+                <button mat-raised-button color="primary" [disabled]="profileForm.invalid || isLoading"
+                    (click)="onSubmit()">
+                    <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                    <mat-icon *ngIf="!isLoading">save</mat-icon>
+                    {{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>

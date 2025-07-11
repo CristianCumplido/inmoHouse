@@ -132,8 +132,8 @@ export class UserListComponent implements OnInit {
   delete(id: string) {
     this.userService.delete(id).subscribe({
       next: () => {
-        this.allUsers = this.allUsers.filter((u) => u.id !== id);
-        this.applyFilters();
+        this.getUsers();
+
         this.snackBar.open('Usuario eliminado exitosamente', 'Cerrar', {
           duration: 3000,
           horizontalPosition: 'center',

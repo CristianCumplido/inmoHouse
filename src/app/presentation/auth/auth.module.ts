@@ -18,6 +18,7 @@ import {
 } from '@azure/msal-browser';
 import { msalConfig } from 'src/app/msal.config';
 import { MSALInstanceFactory, MSALServiceFactory } from 'src/app/msal.factory';
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [AuthComponent, LoginComponent, AuthCallbackComponent],
   imports: [
@@ -28,6 +29,7 @@ import { MSALInstanceFactory, MSALServiceFactory } from 'src/app/msal.factory';
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
+    MatIconModule,
     MatProgressBarModule,
     MsalModule.forRoot(
       new PublicClientApplication(msalConfig),

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { UserRole } from 'src/app/core/models/roles.enum';
 import { User } from 'src/app/core/models/user.model';
 
@@ -10,26 +10,40 @@ import { User } from 'src/app/core/models/user.model';
 export class AuthService {
   private baseUrl = 'http://localhost:3000/api/v1/auth';
 
-  private currentUser: User | null = null;
-
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
   constructor(private http: HttpClient) {}
 
-  logout(userData: { email: string; password: string }) {
-    return this.http.post(`${this.baseUrl}/login`, userData);
+  login(userData: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login`, userData).pipe(
+      tap((user: any) => {
+        this.currentUserSubject.next(user.data.user);
+      })
+    );
   }
-
+  logout() {
+    this.currentUserSubject.next(null);
+  }
   isLoggedIn(): boolean {
-    return !!this.currentUser;
+    return !!this.currentUserSubject.value;
   }
 
   getUser(): User | null {
-    return this.currentUser;
+    return this.currentUserSubject.value;
   }
 
   loginWithAzure(azureTokenReq: string) {
-    return this.http.post(`${this.baseUrl}/azure-login`, {
-      azureToken: azureTokenReq,
-    });
+    return this.http
+      .post(`${this.baseUrl}/azure-login`, {
+        azureToken: azureTokenReq,
+      })
+      .pipe(
+        tap((user: any) => {
+          this.currentUserSubject.next(user.data.user);
+          // Opcional: guarda en localStorage si quieres persistencia
+          localStorage.setItem('currentUser', JSON.stringify(user));
+        })
+      );
   }
   // ✅ Método para registrar un usuario
   register(userData: {

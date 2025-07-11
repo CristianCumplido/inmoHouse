@@ -9,4 +9,5 @@ export interface Property {
   bathrooms: number;
   parking: number;
   propertyType?: string;
+  featured?: boolean; // Indica si es un inmueble destacado
 }

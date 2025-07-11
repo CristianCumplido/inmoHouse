@@ -103,7 +103,7 @@ export class PropertyListComponent implements OnInit, OnDestroy {
       });
   }
 
-  private loadProperties(): void {
+  loadProperties(): void {
     this.loading = true;
 
     this.propertyService
@@ -111,14 +111,12 @@ export class PropertyListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (properties: any) => {
-          console.log('Properties loaded:', properties);
           this.allProperties = properties;
           this.properties = properties;
           this.applyFilters();
           this.loading = false;
         },
         error: (error) => {
-          console.error('Error loading properties:', error);
           this.showErrorMessage('Error al cargar las propiedades');
           this.loading = false;
         },
@@ -203,7 +201,6 @@ export class PropertyListComponent implements OnInit, OnDestroy {
           this.loading = false;
         },
         error: (error) => {
-          console.error('Error deleting property:', error);
           this.showErrorMessage('Error al eliminar la propiedad');
           this.loading = false;
         },
@@ -234,7 +231,6 @@ export class PropertyListComponent implements OnInit, OnDestroy {
 
       this.showSuccessMessage('Archivo exportado exitosamente');
     } catch (error) {
-      console.error('Error exporting properties:', error);
       this.showErrorMessage('Error al exportar las propiedades');
     }
   }
@@ -276,5 +272,8 @@ export class PropertyListComponent implements OnInit, OnDestroy {
       duration: 5000,
       panelClass: ['error-snackbar'],
     });
+  }
+  clearLocation(): void {
+    this.filterForm.patchValue({ location: [] });
   }
 }

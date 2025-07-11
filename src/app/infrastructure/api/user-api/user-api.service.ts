@@ -35,9 +35,21 @@ export class UserApiService {
       map((res) => res.data)
     );
   }
-
+  getProfile(id: string): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/users/${id}`);
+  }
   getById(id: string) {
     return of(this.Users.find((u) => u.id === id)!);
+  }
+  changePassword(
+    id: string,
+    currentPassword: string,
+    newPassword: string
+  ): Observable<any> {
+    return this.http.patch<any>(`${this.baseUrl}/users/${id}/password`, {
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+    });
   }
 
   create(user: User) {

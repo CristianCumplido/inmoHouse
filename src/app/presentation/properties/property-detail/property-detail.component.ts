@@ -43,7 +43,7 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadProperty(): void {
+  loadProperty(): void {
     const id = this.route.snapshot.paramMap.get('id');
 
     if (!id) {

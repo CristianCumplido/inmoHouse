@@ -3,7 +3,9 @@ import { Property } from '../../../core/models/property.model';
 import { PropertyApiService } from '../../../infrastructure/api/property-api/property-api.service';
 import { Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class PropertyService {
   constructor(private api: PropertyApiService) {}
 

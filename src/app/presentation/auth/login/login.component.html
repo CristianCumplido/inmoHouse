@@ -1,76 +1,193 @@
-<div class="auth-wrapper">
-    <!-- Imagen para desktop - solo visible en pantallas grandes -->
-    <div class="auth-image-section">
-        <img src="assets/images/login-banner.jpg" alt="Login Banner" class="auth-image">
-        <!-- Puedes agregar contenido adicional aquí como texto de bienvenida -->
-        <div class="welcome-text">
-            <h1>Bienvenido</h1>
-            <p>Accede a tu cuenta para continuar</p>
+<div class="auth">
+    <!-- Hero Section - Desktop Only -->
+    <div class="auth__hero">
+        <div class="auth__hero-content">
+            <img src="assets/images/login-banner.jpg" alt="Login Banner" class="auth__hero-image">
+
+            <div class="auth__hero-text">
+                <h1 class="auth__hero-title">
+                    <mat-icon class="auth__hero-icon">business</mat-icon>
+                    Bienvenido
+                </h1>
+                <p class="auth__hero-subtitle">
+                    Accede a tu cuenta para continuar
+                </p>
+
+                <div class="auth__hero-features">
+                    <div class="auth__hero-feature">
+                        <mat-icon>security</mat-icon>
+                        <span>Acceso seguro</span>
+                    </div>
+                    <div class="auth__hero-feature">
+                        <mat-icon>cloud</mat-icon>
+                        <span>En la nube</span>
+                    </div>
+                    <div class="auth__hero-feature">
+                        <mat-icon>support_agent</mat-icon>
+                        <span>Soporte 24/7</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Formulario de autenticación -->
-    <div class="auth-form-section">
-        <div class="auth-container">
-            <h2>{{ isRegisterMode ? 'Registrarse' : 'Iniciar Sesión' }}</h2>
+    <!-- Form Section -->
+    <div class="auth__form-section">
+        <div class="auth__form-container">
+            <!-- Header -->
+            <div class="auth__header">
+                <div class="auth__logo">
+                    <mat-icon class="auth__logo-icon">apartment</mat-icon>
+                    <span class="auth__logo-text">PropManager</span>
+                </div>
 
-            <div class="toggle-mode-container">
-                <p class="toggle-text">
+                <h2 class="auth__title">
+                    {{ isRegisterMode ? 'Registrarse' : 'Iniciar Sesión' }}
+                </h2>
+            </div>
+
+            <!-- Mode Toggle -->
+            <div class="auth__toggle">
+                <p class="auth__toggle-text">
                     {{ isRegisterMode ? '¿Ya tienes una cuenta?' : '¿No tienes cuenta aún?' }}
                 </p>
-                <button mat-button color="primary" (click)="toggleMode()" class="toggle-btn">
+                <button mat-button color="primary" (click)="toggleMode()" class="auth__toggle-btn">
+                    <mat-icon>{{ isRegisterMode ? 'login' : 'person_add' }}</mat-icon>
                     {{ isRegisterMode ? 'Inicia sesión aquí' : 'Regístrate aquí' }}
                 </button>
             </div>
 
-            <!-- Formulario de Login -->
-            <form *ngIf="!isRegisterMode" [formGroup]="loginForm" (ngSubmit)="loginWithCredentials()">
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Email</mat-label>
-                    <input matInput formControlName="email" type="email" required>
-                </mat-form-field>
+            <!-- Login Form -->
+            <div *ngIf="!isRegisterMode" class="auth__form-wrapper">
+                <form [formGroup]="loginForm" (ngSubmit)="loginWithCredentials()" class="auth__form">
+                    <mat-form-field appearance="outline" class="auth__field auth__field--full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email" type="email" required class="auth__input">
+                        <mat-icon matPrefix class="auth__field-icon">email</mat-icon>
+                    </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Contraseña</mat-label>
-                    <input matInput formControlName="password" type="password" required>
-                </mat-form-field>
+                    <mat-form-field appearance="outline" class="auth__field auth__field--full-width">
+                        <mat-label>Contraseña</mat-label>
+                        <input matInput formControlName="password" type="password" required class="auth__input">
+                        <mat-icon matPrefix class="auth__field-icon">lock</mat-icon>
+                    </mat-form-field>
 
-                <button mat-raised-button color="primary" type="submit" class="submit-btn">
-                    Iniciar sesión
-                </button>
-            </form>
+                    <button mat-raised-button color="primary" type="submit"
+                        class="auth__submit-btn auth__submit-btn--login">
+                        <mat-icon>login</mat-icon>
+                        <span>Iniciar sesión</span>
+                    </button>
+                </form>
+            </div>
 
-            <!-- Formulario de Registro -->
-            <form *ngIf="isRegisterMode" [formGroup]="registerForm" (ngSubmit)="registerWithCredentials()">
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Nombre</mat-label>
-                    <input matInput formControlName="name" required>
-                </mat-form-field>
+            <!-- Register Form -->
+            <div *ngIf="isRegisterMode" class="auth__form-wrapper">
+                <form [formGroup]="registerForm" (ngSubmit)="registerWithCredentials()" class="auth__form">
+                    <mat-form-field appearance="outline" class="auth__field auth__field--full-width">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput formControlName="name" required class="auth__input">
+                        <mat-icon matPrefix class="auth__field-icon">person</mat-icon>
+                    </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Email</mat-label>
-                    <input matInput formControlName="email" type="email" required>
-                </mat-form-field>
+                    <mat-form-field appearance="outline" class="auth__field auth__field--full-width">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email" type="email" required class="auth__input">
+                        <mat-icon matPrefix class="auth__field-icon">email</mat-icon>
+                    </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Contraseña</mat-label>
-                    <input matInput formControlName="password" type="password" required>
-                </mat-form-field>
+                    <mat-form-field appearance="outline" class="auth__field auth__field--full-width">
+                        <mat-label>Contraseña</mat-label>
+                        <input matInput formControlName="password" type="password" required class="auth__input">
+                        <mat-icon matPrefix class="auth__field-icon">lock</mat-icon>
+                    </mat-form-field>
+                    <!-- Password Strength Indicator -->
+                    <div *ngIf="password?.value && password?.value.length > 0" class="password-strength"
+                        [attr.aria-label]="'Fortaleza de contraseña: ' + getStrengthText(getPasswordStrength(password?.value))">
+                        <div class="password-strength__header">
+                            <span class="password-strength__label">
+                                Fortaleza de la contraseña
+                            </span>
+                            <span class="password-strength__score"
+                                [ngClass]="'password-strength__score--' + getStrengthClass(getPasswordStrength(password?.value))">
+                                {{getStrengthText(getPasswordStrength(password?.value))}}
+                            </span>
+                        </div>
+                        <div class="password-strength__bar">
+                            <div class="password-strength__bar-fill"
+                                [style.width.%]="getStrengthValue(getPasswordStrength(password?.value))"
+                                [ngClass]="'password-strength__bar-fill--' + getStrengthClass(getPasswordStrength(password?.value))">
+                            </div>
+                        </div>
+                        <div class="password-strength__requirements">
+                            <div class="password-strength__requirement"
+                                [class.password-strength__requirement--met]="hasMinLength(password?.value)">
+                                <mat-icon class="password-strength__requirement-icon">
+                                    {{hasMinLength(password?.value) ? 'check_circle' : 'radio_button_unchecked'}}
+                                </mat-icon>
+                                <span>Mínimo 8 caracteres</span>
+                            </div>
+                            <div class="password-strength__requirement"
+                                [class.password-strength__requirement--met]="hasUpperCase(password?.value)">
+                                <mat-icon class="password-strength__requirement-icon">
+                                    {{hasUpperCase(password?.value) ? 'check_circle' : 'radio_button_unchecked'}}
+                                </mat-icon>
+                                <span>Mayúsculas y minúsculas</span>
+                            </div>
+                            <div class="password-strength__requirement"
+                                [class.password-strength__requirement--met]="hasNumbers(password?.value)">
+                                <mat-icon class="password-strength__requirement-icon">
+                                    {{hasNumbers(password?.value) ? 'check_circle' : 'radio_button_unchecked'}}
+                                </mat-icon>
+                                <span>Al menos un número</span>
+                            </div>
+                            <div class="password-strength__requirement"
+                                [class.password-strength__requirement--met]="hasSpecialChar(password?.value)">
+                                <mat-icon class="password-strength__requirement-icon">
+                                    {{hasSpecialChar(password?.value) ? 'check_circle' : 'radio_button_unchecked'}}
+                                </mat-icon>
+                                <span>Caracteres especiales</span>
+                            </div>
+                        </div>
+                    </div>
 
-                <mat-form-field appearance="outline" class="full-width">
-                    <mat-label>Confirmar contraseña</mat-label>
-                    <input matInput formControlName="confirmPassword" type="password" required>
-                </mat-form-field>
+                    <mat-form-field appearance="outline" class="auth__field auth__field--full-width">
+                        <mat-label>Confirmar contraseña</mat-label>
+                        <input matInput formControlName="confirmPassword" type="password" required class="auth__input">
+                        <mat-icon matPrefix class="auth__field-icon">lock_outline</mat-icon>
+                        <mat-error *ngIf="confirmPassword?.invalid && confirmPassword?.touched" class="auth__error">
+                            <mat-icon class="auth__error-icon">error</mat-icon>
+                            {{getConfirmPasswordErrorMessage()}}
+                        </mat-error>
+                    </mat-form-field>
 
-                <button mat-raised-button color="accent" type="submit" class="submit-btn">
-                    Registrarse
-                </button>
-            </form>
 
-            <div class="divider">O usa tu cuenta empresarial</div>
 
-            <button mat-stroked-button color="primary" (click)="loginWithAzure()" class="azure-btn">
-                Iniciar con cuenta corporativa (Azure)
+                    <button mat-raised-button color="accent" type="submit" [disabled]="!registerForm.valid"
+                        class="auth__submit-btn auth__submit-btn--register">
+                        <mat-icon>person_add</mat-icon>
+                        <span>Registrarse</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Divider -->
+            <div class="auth__divider">
+                <span class="auth__divider-text">O usa tu cuenta empresarial</span>
+            </div>
+
+            <!-- Azure Login Button -->
+            <button mat-stroked-button color="primary" (click)="loginWithAzure()" class="auth__azure-btn">
+                <div class="auth__azure-content">
+                    <svg class="auth__microsoft-icon" viewBox="0 0 23 23" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1h10v10H1z" fill="#f25022" />
+                        <path d="M12 1h10v10H12z" fill="#00a4ef" />
+                        <path d="M1 12h10v10H1z" fill="#ffb900" />
+                        <path d="M12 12h10v10H12z" fill="#7fba00" />
+                    </svg>
+                    <span class="auth__azure-text">Iniciar con cuenta corporativa (Azure)</span>
+                    <mat-icon class="auth__azure-arrow">arrow_forward</mat-icon>
+                </div>
             </button>
         </div>
     </div>

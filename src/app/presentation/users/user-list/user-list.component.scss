@@ -12,6 +12,7 @@
       align-items: center;
       gap: 0.5rem;
       font-size: 1.5rem;
+      margin-bottom: 10px;
 
       mat-icon {
         font-size: 1.8rem;
@@ -41,7 +42,7 @@
 
 .actions-section {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   padding-top: 1rem;
 }
 
@@ -121,7 +122,7 @@
 
   mat-card-actions {
     padding-top: 1rem;
-
+    justify-content: center;
     button {
       margin-left: 0.5rem;
 
@@ -191,7 +192,7 @@
 
   .user-card {
     mat-card-actions {
-      flex-direction: column;
+      // flex-direction: column;
       gap: 0.5rem;
 
       button {
@@ -200,4 +201,28 @@
       }
     }
   }
+}
+.user-list__card-header {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+
+  .mat-card-avatar {
+    margin: 0 0 1rem 0 !important; // Centrar avatar y dar espacio abajo
+  }
+
+  .mat-card-title {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .mat-card-subtitle {
+    margin: 0 !important;
+  }
+}
+.role-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem; // Espacio entre icono y texto
 }

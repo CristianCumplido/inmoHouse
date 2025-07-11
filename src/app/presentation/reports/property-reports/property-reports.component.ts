@@ -20,7 +20,6 @@ import {
   ConfirmDeleteDialogComponent,
   ConfirmDeleteDialogData,
 } from 'src/app/shared/confirm-delete-dialog/confirm-delete-dialog.component';
-
 // Chart.js (install with: npm install chart.js)
 declare var Chart: any;
 
@@ -151,7 +150,7 @@ export class PropertyReportsComponent
       });
   }
 
-  private loadProperties(): void {
+  loadProperties(): void {
     this.loading = true;
 
     this.reportsService
@@ -239,7 +238,7 @@ export class PropertyReportsComponent
     }
   }
 
-  private calculateSummary(): void {
+  calculateSummary(): void {
     const total = this.filteredProperties.length;
     const active = this.filteredProperties.filter(
       (p) => p.status === 'active'

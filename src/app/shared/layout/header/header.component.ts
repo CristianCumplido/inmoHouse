@@ -12,9 +12,26 @@ export class HeaderComponent {
   authService = inject(AuthService);
   roleService = inject(RoleService);
   router = inject(Router);
-
+  user: any;
   logout() {
-    // this.authService.logout();
+    this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  ngOnInit() {
+    this.authService.currentUser$.subscribe((user) => {
+      this.user = user;
+      console.log('User actualizado:', this.user);
+    });
+  }
+
+  redirectToHome() {
+    if (this.user.role === 'Administrator') {
+      this.router.navigate(['/admin']);
+    } else if (this.user.role === 'Agente') {
+      this.router.navigate(['/agent']);
+    } else if (this.user.role === 'Cliente') {
+      this.router.navigate(['/client']);
+    }
   }
 }

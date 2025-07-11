@@ -194,7 +194,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  private loadAnalyticsData(): void {
+  loadAnalyticsData(): void {
     this.loading = true;
 
     this.reportsService

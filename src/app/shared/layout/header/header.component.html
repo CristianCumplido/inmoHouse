@@ -1,125 +1,223 @@
-<!-- header.component.html -->
 <mat-toolbar class="header" color="primary">
-    <div class="nav-container">
-        <!-- Logo y título -->
-        <div class="logo-section">
-            <mat-icon class="logo-icon">home</mat-icon>
-            <a routerLink="/" class="logo-link">
-                <span class="logo-text">InmoHouse</span>
+    <div class="header__container">
+        <!-- Logo Section -->
+        <div class="header__brand">
+            <mat-icon class="header__brand-icon">real_estate_agent</mat-icon>
+            <a routerLink="/" class="header__brand-link" (click)="redirectToHome()">
+                <span class="header__brand-text">InmoHouse</span>
+                <span class="header__brand-subtitle">Premium</span>
             </a>
         </div>
 
-        <!-- Spacer para empujar el contenido hacia la derecha -->
-        <span class="spacer"></span>
+        <!-- Spacer -->
+        <span class="header__spacer"></span>
 
-        <!-- Menú de navegación -->
-        <div class="nav-menu">
-            <ng-container *ngIf="authService.isLoggedIn(); else guestLinks">
-                <!-- Menú de dashboard según rol -->
+        <!-- Navigation Menu - Desktop -->
+        <nav class="header__nav">
+            <ng-container *ngIf="authService.isLoggedIn()">
+                <!-- Dashboard Links by Role -->
                 <ng-container *ngIf="roleService.isAdmin()">
-                    <button mat-button routerLink="/admin" class="nav-button">
-                        <mat-icon>admin_panel_settings</mat-icon>
-                        <span>Panel Admin</span>
-                    </button>
+                    <a mat-button routerLink="/admin" class="header__nav-button header__nav-button--admin"
+                        routerLinkActive="header__nav-button--active">
+                        <mat-icon class="header__nav-icon">admin_panel_settings</mat-icon>
+                        <span class="header__nav-text">Panel Admin</span>
+                        <div class="header__nav-indicator"></div>
+                    </a>
                 </ng-container>
 
                 <ng-container *ngIf="roleService.isAgent()">
-                    <button mat-button routerLink="/agent" class="nav-button">
-                        <mat-icon>business_center</mat-icon>
-                        <span>Panel Agente</span>
-                    </button>
+                    <a mat-button routerLink="/agent" class="header__nav-button header__nav-button--agent"
+                        routerLinkActive="header__nav-button--active">
+                        <mat-icon class="header__nav-icon">business_center</mat-icon>
+                        <span class="header__nav-text">Panel Agente</span>
+                        <div class="header__nav-indicator"></div>
+                    </a>
                 </ng-container>
 
                 <ng-container *ngIf="roleService.isClient()">
-                    <button mat-button routerLink="/client" class="nav-button">
-                        <mat-icon>person_outline</mat-icon>
-                        <span>Mi Panel</span>
-                    </button>
+                    <a mat-button routerLink="/client" class="header__nav-button header__nav-button--client"
+                        routerLinkActive="header__nav-button--active">
+                        <mat-icon class="header__nav-icon">person_outline</mat-icon>
+                        <span class="header__nav-text">Mi Panel</span>
+                        <div class="header__nav-indicator"></div>
+                    </a>
                 </ng-container>
 
-                <!-- Menú de usuario -->
-                <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-trigger">
-                    <mat-icon>account_circle</mat-icon>
-                    <span>Mi Cuenta</span>
-                    <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+                <!-- Notifications Button -->
+                <button mat-icon-button class="header__notification-btn" matTooltip="Notificaciones"
+                    matTooltipPosition="below">
+                    <mat-icon class="header__notification-icon">notifications</mat-icon>
+                    <span class="header__notification-badge">0</span>
                 </button>
 
-                <!-- Menú desplegable del usuario -->
-                <mat-menu #userMenu="matMenu" class="user-menu">
-                    <button mat-menu-item routerLink="/profile">
-                        <mat-icon>person</mat-icon>
-                        <span>Mi Perfil</span>
+                <!-- User Menu -->
+                <div class="header__user-menu">
+                    <button mat-button [matMenuTriggerFor]="userMenu" class="header__user-trigger"
+                        #userMenuTrigger="matMenuTrigger">
+                        <div class="header__user-avatar">
+                            <mat-icon class="header__user-icon">account_circle</mat-icon>
+                            <div class="header__user-status"></div>
+                        </div>
+                        <div class="header__user-info">
+                            <span class="header__user-name">Mi Cuenta</span>
+                            <!-- <span class="header__user-role">Usuario</span> -->
+                        </div>
+                        <mat-icon class="header__dropdown-icon"
+                            [class.header__dropdown-icon--open]="userMenuTrigger.menuOpen">
+                            expand_more
+                        </mat-icon>
                     </button>
-                    <button mat-menu-item routerLink="/change-password">
-                        <mat-icon>lock</mat-icon>
-                        <span>Cambiar Contraseña</span>
-                    </button>
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item (click)="logout()" class="logout-item">
-                        <mat-icon>logout</mat-icon>
-                        <span>Cerrar Sesión</span>
-                    </button>
-                </mat-menu>
+
+                    <!-- User Dropdown Menu -->
+                    <mat-menu #userMenu="matMenu" class="header__user-dropdown">
+                        <div class="header__dropdown-header">
+                            <div class="header__dropdown-avatar">
+                                <mat-icon>account_circle</mat-icon>
+                            </div>
+                            <div class="header__dropdown-info">
+                                <span class="header__dropdown-name">{{user.name}}</span>
+                                <span class="header__dropdown-email">{{user.email}}</span>
+                            </div>
+                        </div>
+
+                        <mat-divider class="header__dropdown-divider"></mat-divider>
+
+                        <button mat-menu-item routerLink="/profile" class="header__dropdown-item">
+                            <mat-icon class="header__dropdown-item-icon">person</mat-icon>
+                            <span class="header__dropdown-item-text">Mi Perfil</span>
+                            <mat-icon class="header__dropdown-item-arrow">chevron_right</mat-icon>
+                        </button>
+
+                        <button mat-menu-item routerLink="/change-password" class="header__dropdown-item">
+                            <mat-icon class="header__dropdown-item-icon">lock</mat-icon>
+                            <span class="header__dropdown-item-text">Cambiar Contraseña</span>
+                            <mat-icon class="header__dropdown-item-arrow">chevron_right</mat-icon>
+                        </button>
+
+                        <!-- <button mat-menu-item class="header__dropdown-item">
+                            <mat-icon class="header__dropdown-item-icon">settings</mat-icon>
+                            <span class="header__dropdown-item-text">Configuración</span>
+                            <mat-icon class="header__dropdown-item-arrow">chevron_right</mat-icon>
+                        </button> -->
+
+                        <mat-divider class="header__dropdown-divider"></mat-divider>
+
+                        <button mat-menu-item (click)="logout()"
+                            class="header__dropdown-item header__dropdown-item--logout">
+                            <mat-icon class="header__dropdown-item-icon">logout</mat-icon>
+                            <span class="header__dropdown-item-text">Cerrar Sesión</span>
+                        </button>
+                    </mat-menu>
+                </div>
             </ng-container>
 
-            <!-- Enlaces para usuarios no autenticados -->
-            <ng-template #guestLinks>
-                <button mat-button routerLink="/login" class="nav-button">
-                    <mat-icon>login</mat-icon>
-                    <span>Iniciar Sesión</span>
-                </button>
-                <button mat-raised-button routerLink="/register" class="register-button">
-                    <mat-icon>person_add</mat-icon>
-                    <span>Registrarse</span>
-                </button>
-            </ng-template>
-        </div>
+            <!-- Guest Links -->
+            <!-- <ng-template #guestLinks>
+                <div class="header__guest-actions">
+                    <a mat-button routerLink="/login" class="header__guest-button header__guest-button--login">
+                        <mat-icon class="header__guest-icon">login</mat-icon>
+                        <span class="header__guest-text">Iniciar Sesión</span>
+                    </a>
 
-        <!-- Menú hamburguesa para móviles -->
-        <button mat-icon-button [matMenuTriggerFor]="mobileMenu" class="mobile-menu-button">
-            <mat-icon>menu</mat-icon>
+                    <a mat-raised-button routerLink="/register"
+                        class="header__guest-button header__guest-button--register">
+                        <mat-icon class="header__guest-icon">person_add</mat-icon>
+                        <span class="header__guest-text">Registrarse</span>
+                    </a>
+                </div>
+            </ng-template> -->
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button mat-icon-button [matMenuTriggerFor]="mobileMenu" class="header__mobile-toggle" matTooltip="Menú"
+            matTooltipPosition="below">
+            <mat-icon class="header__mobile-icon">menu</mat-icon>
         </button>
 
-        <!-- Menú móvil -->
-        <mat-menu #mobileMenu="matMenu" class="mobile-menu">
+        <!-- Mobile Menu -->
+        <mat-menu #mobileMenu="matMenu" class="header__mobile-menu">
             <ng-container *ngIf="authService.isLoggedIn(); else guestMobileLinks">
-                <button mat-menu-item *ngIf="roleService.isAdmin()" routerLink="/admin">
-                    <mat-icon>admin_panel_settings</mat-icon>
-                    <span>Panel Admin</span>
+                <!-- Mobile User Info -->
+                <div class="header__mobile-user">
+                    <div class="header__mobile-avatar">
+                        <mat-icon>account_circle</mat-icon>
+                    </div>
+                    <div class="header__mobile-user-info">
+                        <span class="header__mobile-user-name">Usuario</span>
+                        <span class="header__mobile-user-email">usuarioemail.com</span>
+                    </div>
+                </div>
+
+                <mat-divider class="header__mobile-divider"></mat-divider>
+
+                <!-- Role-based Navigation -->
+                <button mat-menu-item *ngIf="roleService.isAdmin()" routerLink="/admin" class="header__mobile-item">
+                    <mat-icon class="header__mobile-item-icon">admin_panel_settings</mat-icon>
+                    <span class="header__mobile-item-text">Panel Admin</span>
                 </button>
-                <button mat-menu-item *ngIf="roleService.isAgent()" routerLink="/agent">
-                    <mat-icon>business_center</mat-icon>
-                    <span>Panel Agente</span>
+
+                <button mat-menu-item *ngIf="roleService.isAgent()" routerLink="/agent" class="header__mobile-item">
+                    <mat-icon class="header__mobile-item-icon">business_center</mat-icon>
+                    <span class="header__mobile-item-text">Panel Agente</span>
                 </button>
-                <button mat-menu-item *ngIf="roleService.isClient()" routerLink="/client">
-                    <mat-icon>person_outline</mat-icon>
-                    <span>Mi Panel</span>
+
+                <button mat-menu-item *ngIf="roleService.isClient()" routerLink="/client" class="header__mobile-item">
+                    <mat-icon class="header__mobile-item-icon">person_outline</mat-icon>
+                    <span class="header__mobile-item-text">Mi Panel</span>
                 </button>
-                <mat-divider></mat-divider>
-                <button mat-menu-item routerLink="/profile">
-                    <mat-icon>person</mat-icon>
-                    <span>Mi Perfil</span>
+
+                <mat-divider class="header__mobile-divider"></mat-divider>
+
+                <!-- User Actions -->
+                <button mat-menu-item routerLink="/profile" class="header__mobile-item">
+                    <mat-icon class="header__mobile-item-icon">person</mat-icon>
+                    <span class="header__mobile-item-text">Mi Perfil</span>
                 </button>
-                <button mat-menu-item routerLink="/change-password">
-                    <mat-icon>lock</mat-icon>
-                    <span>Cambiar Contraseña</span>
+
+                <button mat-menu-item class="header__mobile-item">
+                    <mat-icon class="header__mobile-item-icon">notifications</mat-icon>
+                    <span class="header__mobile-item-text">Notificaciones</span>
+                    <span class="header__mobile-badge">3</span>
                 </button>
-                <mat-divider></mat-divider>
-                <button mat-menu-item (click)="logout()" class="logout-item">
-                    <mat-icon>logout</mat-icon>
-                    <span>Cerrar Sesión</span>
+
+                <button mat-menu-item routerLink="/change-password" class="header__mobile-item">
+                    <mat-icon class="header__mobile-item-icon">lock</mat-icon>
+                    <span class="header__mobile-item-text">Cambiar Contraseña</span>
+                </button>
+
+                <button mat-menu-item class="header__mobile-item">
+                    <mat-icon class="header__mobile-item-icon">settings</mat-icon>
+                    <span class="header__mobile-item-text">Configuración</span>
+                </button>
+
+                <mat-divider class="header__mobile-divider"></mat-divider>
+
+                <button mat-menu-item (click)="logout()" class="header__mobile-item header__mobile-item--logout">
+                    <mat-icon class="header__mobile-item-icon">logout</mat-icon>
+                    <span class="header__mobile-item-text">Cerrar Sesión</span>
                 </button>
             </ng-container>
 
+            <!-- Guest Mobile Links -->
             <ng-template #guestMobileLinks>
-                <button mat-menu-item routerLink="/login">
-                    <mat-icon>login</mat-icon>
-                    <span>Iniciar Sesión</span>
-                </button>
-                <button mat-menu-item routerLink="/register">
-                    <mat-icon>person_add</mat-icon>
-                    <span>Registrarse</span>
-                </button>
+                <div class="header__mobile-guest">
+                    <div class="header__mobile-guest-header">
+                        <mat-icon class="header__mobile-guest-icon">person_outline</mat-icon>
+                        <span class="header__mobile-guest-title">Accede a tu cuenta</span>
+                    </div>
+
+                    <mat-divider class="header__mobile-divider"></mat-divider>
+
+                    <button mat-menu-item routerLink="/login" class="header__mobile-item">
+                        <mat-icon class="header__mobile-item-icon">login</mat-icon>
+                        <span class="header__mobile-item-text">Iniciar Sesión</span>
+                    </button>
+
+                    <button mat-menu-item routerLink="/register" class="header__mobile-item">
+                        <mat-icon class="header__mobile-item-icon">person_add</mat-icon>
+                        <span class="header__mobile-item-text">Registrarse</span>
+                    </button>
+                </div>
             </ng-template>
         </mat-menu>
     </div>

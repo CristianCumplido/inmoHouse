@@ -174,7 +174,7 @@ mat-form-field {
   }
 
   .metrics-title {
-    color: #1976d2;
+    // color: #1976d2;
     font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: 1rem;
@@ -441,7 +441,6 @@ mat-option {
 // Focus States for Accessibility
 button:focus-visible,
 mat-form-field:focus-within {
-  outline: 2px solid #1976d2;
   outline-offset: 2px;
 }
 

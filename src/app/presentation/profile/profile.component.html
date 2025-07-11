@@ -1,98 +1,259 @@
-<!-- profile.component.html -->
-<div class="profile-container">
-    <div class="profile-card">
-        <!-- Header del perfil -->
-        <div class="profile-header">
-            <div class="avatar-container">
-                <div class="avatar">
-                    <svg class="avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </div>
-                <div class="avatar-badge">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                        <path d="M9 12l2 2 4-4"></path>
-                    </svg>
-                </div>
-            </div>
-            <h2 class="profile-title">Mi Perfil</h2>
-            <p class="profile-subtitle">Gestiona tu información personal</p>
-        </div>
+<div class="profile">
+    <div class="profile__container">
 
-        <!-- Información del perfil -->
-        <div class="profile-content">
-            <div class="info-section">
-                <div class="info-item">
-                    <div class="info-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                    <div class="info-content">
-                        <label class="info-label">Nombre Completo</label>
-                        <span class="info-value">{{ user.name }}</span>
-                    </div>
-                </div>
+        <!-- Profile Card -->
+        <mat-card class="profile__card">
 
-                <div class="info-item">
-                    <div class="info-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                            </path>
-                            <polyline points="22,6 12,13 2,6"></polyline>
-                        </svg>
+            <!-- Header Section -->
+            <div class="profile__header">
+                <div class="profile__background"></div>
+
+                <!-- Avatar Section -->
+                <div class="profile__avatar-section">
+                    <div class="profile__avatar-container">
+                        <div class="profile__avatar"
+                            [style.background-image]="user?.profileImage ? 'url(' + user?.profileImage + ')' : null"
+                            [class.profile__avatar--default]="!user?.profileImage">
+                            <mat-icon *ngIf="!user?.profileImage" class="profile__avatar-icon">person</mat-icon>
+                            <img *ngIf="user?.profileImage" [src]="user?.profileImage" [alt]="user?.name || 'Avatar'"
+                                class="profile__avatar-image">
+                        </div>
+
+                        <!-- Verification Badge -->
+                        <div class="profile__badge" *ngIf="user?.isVerified" matTooltip="Usuario verificado"
+                            matTooltipPosition="below">
+                            <mat-icon class="profile__badge-icon">verified</mat-icon>
+                        </div>
+
+                        <!-- Status Indicator -->
+                        <div class="profile__status" [class.profile__status--online]="user?.isOnline"
+                            [class.profile__status--offline]="!user?.isOnline"
+                            [matTooltip]="user?.isOnline ? 'En línea' : 'Desconectado'">
+                        </div>
                     </div>
-                    <div class="info-content">
-                        <label class="info-label">Correo Electrónico</label>
-                        <span class="info-value">{{ user.email }}</span>
+
+                    <!-- User Info -->
+                    <div class="profile__user-info">
+                        <h1 class="profile__name">{{ user?.name || 'Usuario' }}</h1>
+                        <p class="profile__username">{{ user?.username || user?.email }}</p>
+                        <p class="profile__bio" *ngIf="user?.bio">{{ user?.bio }}</p>
                     </div>
                 </div>
 
-                <div class="info-item">
-                    <div class="info-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
-                    <div class="info-content">
-                        <label class="info-label">Rol</label>
-                        <span class="info-value role-badge">{{ user.role }}</span>
-                    </div>
-                </div>
+
             </div>
 
-            <!-- Acciones -->
-            <div class="actions-section">
-                <button class="btn btn-primary" (click)="editProfile()">
-                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                    </svg>
-                    Editar Perfil
+            <!-- Content Section -->
+            <mat-card-content class="profile__content">
+
+                <!-- Personal Information -->
+                <div class="profile__section">
+                    <div class="profile__section-header">
+                        <mat-icon class="profile__section-icon">person</mat-icon>
+                        <h3 class="profile__section-title">Información Personal</h3>
+                    </div>
+
+                    <div class="profile__info-grid">
+                        <div class="profile__info-item" *ngIf="user?.name">
+                            <div class="profile__info-icon">
+                                <mat-icon>badge</mat-icon>
+                            </div>
+                            <div class="profile__info-content">
+                                <span class="profile__info-label">Nombre Completo</span>
+                                <span class="profile__info-value">{{ user?.name }}</span>
+                            </div>
+                        </div>
+
+                        <div class="profile__info-item" *ngIf="user?.email">
+                            <div class="profile__info-icon">
+                                <mat-icon>email</mat-icon>
+                            </div>
+                            <div class="profile__info-content">
+                                <span class="profile__info-label">Correo Electrónico</span>
+                                <span class="profile__info-value">{{ user?.email }}</span>
+                            </div>
+                            <button mat-icon-button class="profile__info-action" matTooltip="Verificar email"
+                                *ngIf="!user?.emailVerified">
+                                <mat-icon>warning</mat-icon>
+                            </button>
+                            <mat-icon class="profile__info-verified" *ngIf="user?.emailVerified"
+                                matTooltip="Email verificado">
+                                verified
+                            </mat-icon>
+                        </div>
+
+                        <div class="profile__info-item" *ngIf="user?.phone">
+                            <div class="profile__info-icon">
+                                <mat-icon>phone</mat-icon>
+                            </div>
+                            <div class="profile__info-content">
+                                <span class="profile__info-label">Teléfono</span>
+                                <span class="profile__info-value">{{ user?.phone }}</span>
+                            </div>
+                        </div>
+
+                        <div class="profile__info-item" *ngIf="user?.role">
+                            <div class="profile__info-icon">
+                                <mat-icon>work</mat-icon>
+                            </div>
+                            <div class="profile__info-content">
+                                <span class="profile__info-label">Rol</span>
+                                <mat-chip class="profile__role-chip"
+                                    [class]="'profile__role-chip--' + (user?.role | lowercase)">
+                                    {{ user?.role }}
+                                </mat-chip>
+                            </div>
+                        </div>
+
+                        <div class="profile__info-item" *ngIf="user?.department">
+                            <div class="profile__info-icon">
+                                <mat-icon>business</mat-icon>
+                            </div>
+                            <div class="profile__info-content">
+                                <span class="profile__info-label">Departamento</span>
+                                <span class="profile__info-value">{{ user?.department }}</span>
+                            </div>
+                        </div>
+
+                        <div class="profile__info-item" *ngIf="user?.location">
+                            <div class="profile__info-icon">
+                                <mat-icon>location_on</mat-icon>
+                            </div>
+                            <div class="profile__info-content">
+                                <span class="profile__info-label">Ubicación</span>
+                                <span class="profile__info-value">{{ user?.location }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Information -->
+                <div class="profile__section">
+                    <div class="profile__section-header">
+                        <mat-icon class="profile__section-icon">security</mat-icon>
+                        <h3 class="profile__section-title">Información de Cuenta</h3>
+                    </div>
+
+                    <div class="profile__info-grid">
+                        <div class="profile__info-item">
+                            <div class="profile__info-icon">
+                                <mat-icon>event</mat-icon>
+                            </div>
+                            <div class="profile__info-content">
+                                <span class="profile__info-label">Miembro desde</span>
+                                <span class="profile__info-value">{{ user?.createdAt | date:'dd/MM/yyyy' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="profile__info-item">
+                            <div class="profile__info-icon">
+                                <mat-icon>update</mat-icon>
+                            </div>
+                            <div class="profile__info-content">
+                                <span class="profile__info-label">Última actualización</span>
+                                <span class="profile__info-value">{{ lastUpdated | date:'dd/MM/yyyy HH:mm' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="profile__info-item" *ngIf="user?.lastLogin">
+                            <div class="profile__info-icon">
+                                <mat-icon>login</mat-icon>
+                            </div>
+                            <div class="profile__info-content">
+                                <span class="profile__info-label">Último acceso</span>
+                                <span class="profile__info-value">{{ user?.lastLogin | date:'dd/MM/yyyy HH:mm' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Section -->
+                <div class="profile__section" *ngIf="showSecurityInfo">
+                    <div class="profile__section-header">
+                        <mat-icon class="profile__section-icon">shield</mat-icon>
+                        <h3 class="profile__section-title">Seguridad</h3>
+                    </div>
+
+                    <!-- <div class="profile__security-grid">
+                        <div class="profile__security-item"
+                            [class.profile__security-item--enabled]="user?.twoFactorEnabled">
+                            <div class="profile__security-icon">
+                                <mat-icon>security</mat-icon>
+                            </div>
+                            <div class="profile__security-content">
+                                <span class="profile__security-label">Autenticación en dos pasos</span>
+                                <span class="profile__security-status">
+                                    {{ user?.twoFactorEnabled ? 'Activada' : 'Desactivada' }}
+                                </span>
+                            </div>
+                            <mat-slide-toggle [checked]="user?.twoFactorEnabled" (change)="toggleTwoFactor($event)"
+                                class="profile__security-toggle">
+                            </mat-slide-toggle>
+                        </div>
+                    </div> -->
+                </div>
+
+            </mat-card-content>
+
+            <!-- Actions Section -->
+            <mat-card-actions class="profile__actions">
+                <!-- <button mat-raised-button color="primary" class="profile__action-button profile__action-button--primary"
+                    (click)="editProfile()">
+                    <mat-icon class="profile__action-icon">edit</mat-icon>
+                    <span>Editar Perfil</span>
+                </button> -->
+
+                <button mat-stroked-button class="profile__action-button profile__action-button--secondary"
+                    (click)="changePassword()">
+                    <mat-icon class="profile__action-icon">lock</mat-icon>
+                    <span>Cambiar Contraseña</span>
                 </button>
 
-                <button class="btn btn-secondary" (click)="changePassword()">
-                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                        <circle cx="12" cy="16" r="1"></circle>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                    Cambiar Contraseña
+                <!-- <button mat-button class="profile__action-button profile__action-button--tertiary"
+                    [matMenuTriggerFor]="moreMenu">
+                    <mat-icon class="profile__action-icon">more_vert</mat-icon>
+                    <span>Más opciones</span>
                 </button>
-            </div>
+
+                More Menu 
+                <mat-menu #moreMenu="matMenu" class="profile__menu">
+                    <button mat-menu-item (click)="downloadData()">
+                        <mat-icon>download</mat-icon>
+                        <span>Descargar mis datos</span>
+                    </button>
+                    <button mat-menu-item (click)="exportProfile()">
+                        <mat-icon>share</mat-icon>
+                        <span>Exportar perfil</span>
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item (click)="deleteAccount()" class="profile__menu-item--danger">
+                        <mat-icon>delete</mat-icon>
+                        <span>Eliminar cuenta</span>
+                    </button>
+                </mat-menu> -->
+            </mat-card-actions>
+
+        </mat-card>
+
+
+
+        <!-- Loading State -->
+        <div class="profile__loading" *ngIf="isLoading">
+            <mat-spinner diameter="50"></mat-spinner>
+            <p class="profile__loading-text">Cargando perfil...</p>
         </div>
 
-        <!-- Footer opcional -->
-        <div class="profile-footer">
-            <p class="footer-text">
-                Última actualización: {{ lastUpdated | date:'dd/MM/yyyy' }}
+        <!-- Empty State -->
+        <div class="profile__empty" *ngIf="!user && !isLoading">
+            <mat-icon class="profile__empty-icon">person_off</mat-icon>
+            <h3 class="profile__empty-title">No se pudo cargar el perfil</h3>
+            <p class="profile__empty-message">
+                Hubo un problema al cargar la información del perfil.
             </p>
+            <button mat-raised-button color="primary" (click)="reloadProfile()">
+                <mat-icon>refresh</mat-icon>
+                Intentar de nuevo
+            </button>
         </div>
+
     </div>
-</div>

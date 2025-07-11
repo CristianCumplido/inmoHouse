@@ -10,7 +10,6 @@ export class ExportService {
   // Export chart as image
   exportChart(chartName: string, chartInstance: any): void {
     if (!chartInstance) {
-      console.error('Chart instance not found');
       return;
     }
 
@@ -24,15 +23,12 @@ export class ExportService {
       }.png`;
       link.href = url;
       link.click();
-    } catch (error) {
-      console.error('Error exporting chart:', error);
-    }
+    } catch (error) {}
   }
 
   // Export data to CSV
   exportToCSV(data: any[], filename: string): void {
     if (!data || data.length === 0) {
-      console.error('No data to export');
       return;
     }
 
@@ -58,9 +54,7 @@ export class ExportService {
       ].join('\n');
 
       this.downloadFile(csvContent, `${filename}.csv`, 'text/csv');
-    } catch (error) {
-      console.error('Error exporting to CSV:', error);
-    }
+    } catch (error) {}
   }
 
   // Export analytics report to PDF
@@ -72,9 +66,7 @@ export class ExportService {
           `analytics-report-${new Date().toISOString().split('T')[0]}.pdf`
         );
       },
-      error: (error: any) => {
-        console.error('Error exporting analytics to PDF:', error);
-      },
+      error: (error: any) => {},
     });
   }
 
@@ -87,9 +79,7 @@ export class ExportService {
           `analytics-report-${new Date().toISOString().split('T')[0]}.xlsx`
         );
       },
-      error: (error) => {
-        console.error('Error exporting analytics to Excel:', error);
-      },
+      error: (error) => {},
     });
   }
 
@@ -106,9 +96,7 @@ export class ExportService {
           }.${extension}`
         );
       },
-      error: (error) => {
-        console.error('Error exporting property report:', error);
-      },
+      error: (error) => {},
     });
   }
 
@@ -125,9 +113,7 @@ export class ExportService {
           }.${extension}`
         );
       },
-      error: (error) => {
-        console.error('Error exporting sales report:', error);
-      },
+      error: (error) => {},
     });
   }
 
@@ -158,7 +144,6 @@ export class ExportService {
     sheetName: string = 'Sheet1'
   ): void {
     if (!tableData || tableData.length === 0) {
-      console.error('No table data to export');
       return;
     }
 
@@ -189,16 +174,13 @@ export class ExportService {
 
       const blob = new Blob([htmlTable], { type: 'application/vnd.ms-excel' });
       this.downloadBlob(blob, `${filename}.xls`);
-    } catch (error) {
-      console.error('Error exporting table to Excel:', error);
-    }
+    } catch (error) {}
   }
 
   // Print functionality
   printReport(elementId: string): void {
     const printContent = document.getElementById(elementId);
     if (!printContent) {
-      console.error('Element not found for printing');
       return;
     }
 
@@ -209,7 +191,6 @@ export class ExportService {
     );
 
     if (!winPrint) {
-      console.error('Popup blocked - unable to print');
       return;
     }
 
@@ -255,7 +236,6 @@ export class ExportService {
   // Generate comprehensive report
   generateComprehensiveReport(): void {
     // This would typically call multiple services to gather all data
-    console.log('Generating comprehensive report...');
 
     // Mock implementation
     setTimeout(() => {
@@ -282,10 +262,6 @@ export class ExportService {
 
   // Bulk export functionality
   bulkExport(reportTypes: string[], format: 'pdf' | 'excel' | 'csv'): void {
-    console.log(
-      `Starting bulk export for: ${reportTypes.join(', ')} in ${format} format`
-    );
-
     // Mock implementation - in real app, this would call multiple services
     reportTypes.forEach((type, index) => {
       setTimeout(() => {
@@ -310,7 +286,6 @@ export class ExportService {
     frequency: 'daily' | 'weekly' | 'monthly';
     email: string;
   }): void {
-    console.log('Scheduling export with config:', config);
     // This would typically send the configuration to a backend service
     // that handles scheduled exports
   }
