@@ -21,7 +21,6 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
   error: string | null = null;
   isFavorite = false;
 
-  // Imagen por defecto en caso de error
   private defaultImage = 'assets/images/default-property.jpg';
 
   constructor(
@@ -62,7 +61,6 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
           this.property = property;
           this.loading = false;
 
-          // Actualizar el título de la página
           if (property.title) {
             document.title = `${property.title} - Portal Inmobiliario`;
           }
@@ -77,19 +75,15 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
   }
 
   private checkFavoriteStatus(): void {
-    // Aquí puedes implementar la lógica para verificar si la propiedad está en favoritos
-    // Por ejemplo, consultando un servicio de favoritos o localStorage
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     const propertyId = this.route.snapshot.paramMap.get('id');
     this.isFavorite = favorites.includes(propertyId);
   }
 
-  // Navegación
   goBack(): void {
     this.location.back();
   }
 
-  // Cálculos de métricas
   getPricePerSquareMeter(): number {
     if (!this.property || !this.property.area || this.property.area === 0) {
       return 0;
@@ -109,8 +103,6 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
   }
 
   getPublishedDate(): Date {
-    // Si no tienes campo de fecha de publicación, usa la fecha actual
-    // En un caso real, esto vendría del backend
     return new Date();
   }
 
@@ -118,12 +110,10 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  // Manejo de imagen
   onImageError(event: any): void {
     event.target.src = this.defaultImage;
   }
 
-  // Acciones de la propiedad
   shareProperty(): void {
     if (!this.property) return;
 
@@ -136,7 +126,6 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
         })
         .catch((err) => console.log('Error sharing:', err));
     } else {
-      // Fallback para navegadores que no soportan Web Share API
       navigator.clipboard
         .writeText(window.location.href)
         .then(() => {
@@ -185,8 +174,6 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
   contactAgent(): void {
     if (!this.property) return;
 
-    // Aquí puedes implementar la lógica para contactar al agente
-    // Por ejemplo, abrir un modal de contacto o redirigir a WhatsApp
     const message = `Hola, estoy interesado en la propiedad "${this.property.title}" ubicada en ${this.property.location}. ¿Podrías darme más información?`;
     const whatsappUrl = `https://wa.me/573001234567?text=${encodeURIComponent(
       message
@@ -197,40 +184,19 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
   scheduleVisit(): void {
     if (!this.property) return;
 
-    // Aquí puedes abrir un modal para programar una visita
-    // o redirigir a un formulario de contacto
     this.showInfoMessage('Funcionalidad de programar visita en desarrollo');
-
-    // Ejemplo de implementación futura:
-    // const dialogRef = this.dialog.open(ScheduleVisitDialogComponent, {
-    //   width: '500px',
-    //   data: { property: this.property }
-    // });
   }
 
   openMortgageCalculator(): void {
     if (!this.property) return;
 
-    // Aquí puedes abrir un modal con calculadora de hipoteca
-    // o redirigir a una página especializada
     this.showInfoMessage('Calculadora de hipoteca en desarrollo');
-
-    // Ejemplo de implementación futura:
-    // const dialogRef = this.dialog.open(MortgageCalculatorComponent, {
-    //   width: '600px',
-    //   data: {
-    //     propertyPrice: this.property.price,
-    //     propertyTitle: this.property.title
-    //   }
-    // });
   }
 
-  // Método para reintentar carga en caso de error
   retry(): void {
     this.loadProperty();
   }
 
-  // Métodos de utilidad para mensajes
   private showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'Cerrar', {
       duration: 3000,
@@ -258,7 +224,6 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Método para formatear números grandes
   formatCurrency(value: number): string {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -268,7 +233,6 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
     }).format(value);
   }
 
-  // Método para obtener el icono según el tipo de propiedad
   getPropertyTypeIcon(): string {
     if (!this.property?.propertyType) return 'home';
 
@@ -285,13 +249,11 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
     return typeIconMap[this.property.propertyType.toLowerCase()] || 'home';
   }
 
-  // Método para obtener clase CSS según el tipo de propiedad
   getPropertyTypeClass(): string {
     if (!this.property?.propertyType) return 'default';
     return this.property.propertyType.toLowerCase().replace(/\s+/g, '-');
   }
 
-  // Método para validar si la propiedad tiene todas las características necesarias
   isPropertyComplete(): boolean {
     return !!(
       this.property &&
@@ -305,16 +267,12 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Método para obtener sugerencias de propiedades similares (para implementación futura)
   loadSimilarProperties(): void {
     if (!this.property) return;
 
-    // Aquí puedes implementar la carga de propiedades similares
-    // basándose en ubicación, precio, tipo, etc.
     console.log('Loading similar properties...');
   }
 
-  // Método para reportar problema con la propiedad
   reportIssue(): void {
     if (!this.property) return;
 
@@ -326,7 +284,6 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
       url: window.location.href,
     };
 
-    // Aquí puedes enviar el reporte al backend
     console.log('Property issue reported:', issueData);
     this.showSuccessMessage('Reporte enviado. Gracias por tu colaboración.');
   }

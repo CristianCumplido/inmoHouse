@@ -30,9 +30,7 @@ export class ChangePasswordComponent implements OnInit {
     this.changePasswordForm = this.createForm();
   }
 
-  ngOnInit(): void {
-    // Initialization logic if needed
-  }
+  ngOnInit(): void {}
 
   private createForm(): FormGroup {
     return this.fb.group(
@@ -54,7 +52,6 @@ export class ChangePasswordComponent implements OnInit {
     );
   }
 
-  // Custom validator for password strength
   passwordStrengthValidator(
     control: AbstractControl
   ): { [key: string]: any } | null {
@@ -83,7 +80,6 @@ export class ChangePasswordComponent implements OnInit {
       return { mismatch: true };
     }
 
-    // Clear mismatch error if passwords match
     const errors = confirmPassword.errors;
     if (errors) {
       delete errors['mismatch'];
@@ -130,7 +126,6 @@ export class ChangePasswordComponent implements OnInit {
     return (strength / 5) * 100;
   }
 
-  // Password requirement checkers
   hasMinLength(password: string): boolean {
     return password ? password.length >= 8 : false;
   }
@@ -148,7 +143,6 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   onPasswordChange(): void {
-    // Trigger form validation when password changes
     this.changePasswordForm.get('confirmPassword')?.updateValueAndValidity();
   }
 
@@ -228,7 +222,6 @@ export class ChangePasswordComponent implements OnInit {
     this.showErrorMessage(errorMessage);
   }
 
-  // Getters for easy access to form controls
   get currentPassword(): AbstractControl | null {
     return this.changePasswordForm.get('currentPassword');
   }
@@ -241,7 +234,6 @@ export class ChangePasswordComponent implements OnInit {
     return this.changePasswordForm.get('confirmPassword');
   }
 
-  // Error message methods
   getCurrentPasswordErrorMessage(): string {
     if (this.currentPassword?.hasError('required')) {
       return 'La contraseña actual es requerida';

@@ -34,13 +34,13 @@ import { MatIconModule } from '@angular/material/icon';
     MsalModule.forRoot(
       new PublicClientApplication(msalConfig),
       {
-        interactionType: InteractionType.Redirect, // InteractionType.Redirect
+        interactionType: InteractionType.Redirect,
         authRequest: {
           scopes: ['user.read'],
         },
       },
       {
-        interactionType: InteractionType.Redirect, // InteractionType.Redirect
+        interactionType: InteractionType.Redirect,
         protectedResourceMap: new Map([
           ['https://graph.microsoft.com/v1.0/me', ['user.read']],
         ]),

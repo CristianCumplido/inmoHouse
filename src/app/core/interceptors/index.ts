@@ -1,4 +1,3 @@
-// core/interceptors/index.ts
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
 import { LoadingInterceptor } from './loading.interceptor';

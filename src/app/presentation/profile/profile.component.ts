@@ -93,9 +93,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     const newStatus = event.checked;
 
-    // Show confirmation dialog for disabling 2FA
     if (!newStatus) {
-      // Implement confirmation dialog
       this.confirmTwoFactorToggle(newStatus);
     } else {
       this.updateTwoFactorStatus(newStatus);
@@ -107,11 +105,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
       ? '¿Deseas activar la autenticación en dos pasos?'
       : '¿Estás seguro de que quieres desactivar la autenticación en dos pasos?';
 
-    // Here you would typically use a confirmation dialog
     if (confirm(message)) {
       this.updateTwoFactorStatus(enable);
     } else {
-      // Reset toggle if user cancels
       setTimeout(() => {
         if (this.user) {
           this.user.twoFactorEnabled = !enable;
@@ -173,7 +169,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
       email: this.user.email,
       bio: this.user.bio,
       location: this.user.location,
-      // Add other exportable fields
     };
 
     this.downloadFile(
@@ -184,7 +179,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   deleteAccount(): void {
-    // Implement account deletion with proper confirmation
     const confirmation = confirm(
       '¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.'
     );

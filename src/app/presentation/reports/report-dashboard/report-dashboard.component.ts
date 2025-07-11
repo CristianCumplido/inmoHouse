@@ -74,7 +74,7 @@ export class ReportsDashboardComponent implements OnInit, OnDestroy {
         startDate.setFullYear(startDate.getFullYear() - 1);
         break;
       case 'custom':
-        return; // Don't update dates for custom period
+        return;
     }
 
     this.filterForm.patchValue(
@@ -97,13 +97,11 @@ export class ReportsDashboardComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Emit filter changes to child components through a service or other mechanism
     this.showSuccessMessage('Filtros aplicados correctamente');
   }
 
   refreshData(): void {
     this.loading = true;
-    // Trigger refresh in child components
     setTimeout(() => {
       this.loading = false;
       this.showSuccessMessage('Datos actualizados correctamente');

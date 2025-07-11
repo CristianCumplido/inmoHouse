@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private excludedUrls = ['/login', '/register']; // ← Rutas sin token
+  private excludedUrls = ['/login', '/register'];
 
   intercept(
     request: HttpRequest<any>,
@@ -20,7 +20,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
 
     if (isExcluded) {
-      return next.handle(request); // No modificamos el request
+      return next.handle(request);
     }
 
     const token = sessionStorage.getItem('token');

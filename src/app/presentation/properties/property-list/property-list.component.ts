@@ -21,23 +21,18 @@ import {
 export class PropertyListComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
-  // Data properties
   properties: Property[] = [];
   allProperties: Property[] = [];
   filteredProperties: Property[] = [];
   loading = false;
 
-  // User permissions
   isAdmin = false;
 
-  // Form and filters
   filterForm!: FormGroup;
 
-  // View options
   viewMode: 'grid' | 'list' = 'grid';
   pageSize = 12;
 
-  // Location options
   allLocations: string[] = [
     'Bogotá',
     'Medellín',
@@ -94,7 +89,6 @@ export class PropertyListComponent implements OnInit, OnDestroy {
   }
 
   private setupFilterSubscription(): void {
-    // Debounce search input for better performance
     this.filterForm.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged(), takeUntil(this.destroy$))
       .subscribe((formValue) => {
@@ -166,8 +160,7 @@ export class PropertyListComponent implements OnInit, OnDestroy {
     const dialogData: ConfirmDeleteDialogData = {
       title: 'Eliminar Propiedad',
       message: `¿Estás seguro de que deseas eliminar la propiedad "${property.title}"?`,
-      // subMessage: 'Esta acción no se puede deshacer.',
-      // itemName: property.title,
+
       confirmText: 'Eliminar',
       cancelText: 'Cancelar',
     };
@@ -216,8 +209,6 @@ export class PropertyListComponent implements OnInit, OnDestroy {
         Precio: property.price,
         Ubicación: property.location,
         Tipo: property.propertyType,
-        // 'Fecha de creación': property.createdAt,
-        // Destacada: property.featured ? 'Sí' : 'No',
       }));
 
       const csvContent = this.convertToCSV(dataToExport);

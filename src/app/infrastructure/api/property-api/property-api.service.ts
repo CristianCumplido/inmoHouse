@@ -112,7 +112,7 @@ export class PropertyApiService {
       .get<{ data: Property[] }>(`${this.baseUrl}/properties`)
       .pipe(
         tap((res) => {
-          this.Properties = res.data; // ✅ asignación aquí
+          this.Properties = res.data;
         }),
         map((res) => res.data)
       );
@@ -124,8 +124,6 @@ export class PropertyApiService {
   }
 
   create(property: Property) {
-    // property.id = crypto.randomUUID();
-    // this.mockProperties.push(property);
     return this.http.post<Property>(`${this.baseUrl}/properties`, property);
   }
 
@@ -134,7 +132,6 @@ export class PropertyApiService {
       .put<{ data: Property }>(`${this.baseUrl}/properties/${id}`, property)
       .pipe(
         tap((res) => {
-          // Opcional: actualizas el array local si quieres
           const idx = this.Properties.findIndex((p) => p.id === id);
           if (idx !== -1) {
             this.Properties[idx] = res.data;
@@ -149,7 +146,6 @@ export class PropertyApiService {
       .delete<{ data: Property }>(`${this.baseUrl}/properties/${id}`)
       .pipe(
         tap((res) => {
-          // Opcional: actualizas el array local si quieres
           const idx = this.Properties.findIndex((p) => p.id === id);
           if (idx !== -1) {
             this.Properties[idx] = res.data;

@@ -25,7 +25,6 @@ export class PasswordStrengthService {
     const feedback: string[] = [];
     const suggestions: string[] = [];
 
-    // Length check
     if (password.length >= 8) {
       score += 1;
     } else {
@@ -33,7 +32,6 @@ export class PasswordStrengthService {
       suggestions.push('Usa al menos 8 caracteres');
     }
 
-    // Lowercase check
     if (/[a-z]/.test(password)) {
       score += 1;
     } else {
@@ -41,7 +39,6 @@ export class PasswordStrengthService {
       suggestions.push('Agrega letras minúsculas');
     }
 
-    // Uppercase check
     if (/[A-Z]/.test(password)) {
       score += 1;
     } else {
@@ -49,7 +46,6 @@ export class PasswordStrengthService {
       suggestions.push('Agrega letras mayúsculas');
     }
 
-    // Number check
     if (/[0-9]/.test(password)) {
       score += 1;
     } else {
@@ -57,7 +53,6 @@ export class PasswordStrengthService {
       suggestions.push('Agrega números');
     }
 
-    // Special character check
     if (/[^A-Za-z0-9]/.test(password)) {
       score += 1;
     } else {
@@ -65,7 +60,6 @@ export class PasswordStrengthService {
       suggestions.push('Agrega símbolos especiales');
     }
 
-    // Additional checks for very strong passwords
     if (password.length >= 12) {
       score += 0.5;
     }
@@ -74,7 +68,6 @@ export class PasswordStrengthService {
       score += 0.5;
     }
 
-    // Common patterns penalty
     if (this.hasCommonPatterns(password)) {
       score -= 1;
       feedback.push('Contiene patrones comunes');
@@ -111,9 +104,9 @@ export class PasswordStrengthService {
       /admin/i,
       /letmein/i,
       /welcome/i,
-      /(.)\1{2,}/, // Repeated characters
-      /(012|123|234|345|456|567|678|789)/, // Sequential numbers
-      /(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz)/i, // Sequential letters
+      /(.)\1{2,}/,
+      /(012|123|234|345|456|567|678|789)/,
+      /(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz)/i,
     ];
 
     return commonPatterns.some((pattern) => pattern.test(password));

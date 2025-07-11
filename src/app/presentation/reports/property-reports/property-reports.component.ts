@@ -20,7 +20,6 @@ import {
   ConfirmDeleteDialogComponent,
   ConfirmDeleteDialogData,
 } from 'src/app/shared/confirm-delete-dialog/confirm-delete-dialog.component';
-// Chart.js (install with: npm install chart.js)
 declare var Chart: any;
 
 interface PropertySummary {
@@ -45,19 +44,15 @@ export class PropertyReportsComponent
 
   private destroy$ = new Subject<void>();
 
-  // Data properties
   properties: any[] = [];
   filteredProperties: any[] = [];
   dataSource = new MatTableDataSource<any>();
   selectedProperty: any | null = null;
 
-  // Form
   filtersForm!: FormGroup;
 
-  // UI State
   loading = false;
 
-  // Summary data
   summary: PropertySummary = {
     totalProperties: 0,
     activeProperties: 0,
@@ -65,7 +60,6 @@ export class PropertyReportsComponent
     avgDaysOnMarket: 0,
   };
 
-  // Table configuration
   displayedColumns: string[] = [
     'title',
     'propertyType',
@@ -78,7 +72,6 @@ export class PropertyReportsComponent
     'actions',
   ];
 
-  // Options for filters
   locations: string[] = [
     'Bogotá',
     'Medellín',
@@ -92,7 +85,6 @@ export class PropertyReportsComponent
     'Villavicencio',
   ];
 
-  // Chart instance
   private chart: any;
 
   constructor(
@@ -114,7 +106,6 @@ export class PropertyReportsComponent
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    // Custom filter predicate
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       return (
         data.title.toLowerCase().includes(filter) ||
@@ -144,10 +135,7 @@ export class PropertyReportsComponent
   private setupFormSubscriptions(): void {
     this.filtersForm.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        // Auto-apply filters on change (optional)
-        // this.applyFilters();
-      });
+      .subscribe(() => {});
   }
 
   loadProperties(): void {
@@ -175,12 +163,10 @@ export class PropertyReportsComponent
     const filters = this.filtersForm.value;
 
     this.filteredProperties = this.properties.filter((property) => {
-      // Status filter
       if (filters.status && property.status !== filters.status) {
         return false;
       }
 
-      // Property type filter
       if (
         filters.propertyType &&
         property.propertyType !== filters.propertyType
@@ -188,12 +174,10 @@ export class PropertyReportsComponent
         return false;
       }
 
-      // Location filter
       if (filters.location && property.location !== filters.location) {
         return false;
       }
 
-      // Price range filter
       if (filters.minPrice && property.price < filters.minPrice) {
         return false;
       }
@@ -201,7 +185,6 @@ export class PropertyReportsComponent
         return false;
       }
 
-      // Days on market filter
       if (filters.daysOnMarket) {
         const days = property.daysOnMarket;
         switch (filters.daysOnMarket) {
@@ -263,7 +246,6 @@ export class PropertyReportsComponent
 
   selectProperty(property: any): void {
     this.selectedProperty = property;
-    // Load performance data and create chart
     setTimeout(() => {
       this.createPerformanceChart();
     }, 100);
@@ -285,7 +267,6 @@ export class PropertyReportsComponent
 
     const ctx = this.performanceChart.nativeElement.getContext('2d');
 
-    // Mock performance data - in real app, load from service
     const mockData = {
       labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
       views: [45, 52, 38, 67, 73, 89],
@@ -343,7 +324,6 @@ export class PropertyReportsComponent
     }
   }
 
-  // Utility methods
   getDaysClass(days: number): string {
     if (days <= 30) return 'days-good';
     if (days <= 60) return 'days-warning';
@@ -369,7 +349,6 @@ export class PropertyReportsComponent
     return Number(((property.contacts / property.views) * 100).toFixed(1));
   }
 
-  // Actions
   refreshData(): void {
     this.loadProperties();
     this.showSuccessMessage('Datos actualizados');
@@ -390,7 +369,6 @@ export class PropertyReportsComponent
   }
 
   duplicateProperty(property: any): void {
-    // Implementation for duplicating property
     this.showInfoMessage('Funcionalidad de duplicado en desarrollo');
   }
 
@@ -398,8 +376,7 @@ export class PropertyReportsComponent
     const dialogData: ConfirmDeleteDialogData = {
       title: 'Eliminar Propiedad',
       message: `¿Estás seguro de que deseas eliminar la propiedad "${property.title}"?`,
-      // subMessage: 'Esta acción no se puede deshacer.',
-      // itemName: property.title,
+
       confirmText: 'Eliminar',
       cancelText: 'Cancelar',
     };
@@ -413,7 +390,6 @@ export class PropertyReportsComponent
 
     dialogRef.afterClosed().subscribe((confirmed) => {
       if (confirmed) {
-        // Implementation for deleting property
         this.properties = this.properties.filter((p) => p.id !== property.id);
         this.applyFilters();
         this.showSuccessMessage(
@@ -423,7 +399,6 @@ export class PropertyReportsComponent
     });
   }
 
-  // Snackbar messages
   private showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'Cerrar', {
       duration: 3000,

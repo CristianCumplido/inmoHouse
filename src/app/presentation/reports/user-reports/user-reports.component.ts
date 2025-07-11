@@ -20,7 +20,6 @@ import {
   ConfirmDeleteDialogData,
 } from 'src/app/shared/confirm-delete-dialog/confirm-delete-dialog.component';
 
-// Importación correcta de Chart.js
 import { Chart, registerables, ChartConfiguration, ChartType } from 'chart.js';
 
 interface UserSummary {
@@ -53,19 +52,15 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private destroy$ = new Subject<void>();
 
-  // Data properties
   users: any[] = [];
   filteredUsers: any[] = [];
   dataSource = new MatTableDataSource<any>();
   selectedUser: any | null = null;
 
-  // Form
   filtersForm!: FormGroup;
 
-  // UI State
   loading = false;
 
-  // Summary data
   summary: UserSummary = {
     totalUsers: 0,
     activeUsers: 0,
@@ -73,10 +68,8 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     avgPropertiesViewed: 0,
   };
 
-  // Chart data
   userRoleData: UserRoleData[] = [];
 
-  // Table configuration
   displayedColumns: string[] = [
     'name',
     'role',
@@ -89,7 +82,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     'actions',
   ];
 
-  // Chart instances - Tipado correctamente
   private charts: { [key: string]: Chart } = {};
 
   constructor(
@@ -99,7 +91,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {
-    // Registrar todos los componentes de Chart.js
     Chart.register(...registerables);
     this.initializeForm();
   }
@@ -113,7 +104,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    // Custom filter predicate
     this.dataSource.filterPredicate = (data: any, filter: string) => {
       return (
         data.name.toLowerCase().includes(filter) ||
@@ -122,7 +112,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
       );
     };
 
-    // Initialize charts after view init
     setTimeout(() => {
       this.initializeCharts();
     }, 100);
@@ -146,10 +135,7 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
   private setupFormSubscriptions(): void {
     this.filtersForm.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        // Auto-apply filters on change (optional)
-        // this.applyFilters();
-      });
+      .subscribe(() => {});
   }
 
   private loadUsers(): void {
@@ -171,14 +157,12 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
           console.error('Error loading users:', error);
           this.showErrorMessage('Error al cargar los usuarios');
           this.loading = false;
-          // Cargar datos mock en caso de error
           this.loadMockUsers();
         },
       });
   }
 
   private loadMockUsers(): void {
-    // Datos mock para pruebas
     this.users = [
       {
         id: 1,
@@ -226,17 +210,14 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     const filters = this.filtersForm.value;
 
     this.filteredUsers = this.users.filter((user) => {
-      // Role filter
       if (filters.role && user.role !== filters.role) {
         return false;
       }
 
-      // Status filter
       if (filters.status && user.status !== filters.status) {
         return false;
       }
 
-      // Registration period filter
       if (filters.registrationPeriod) {
         const now = new Date();
         const registrationDate = new Date(user.registrationDate);
@@ -260,7 +241,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
 
-      // Activity level filter
       if (filters.activityLevel) {
         const views = user.propertiesViewed;
         switch (filters.activityLevel) {
@@ -307,7 +287,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
       (u) => u.status === 'active'
     ).length;
 
-    // New users this month
     const now = new Date();
     const thisMonth = this.filteredUsers.filter((u) => {
       const regDate = new Date(u.registrationDate);
@@ -317,7 +296,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
       );
     }).length;
 
-    // Average properties viewed
     const avgViewed =
       total > 0
         ? this.filteredUsers.reduce((sum, u) => sum + u.propertiesViewed, 0) /
@@ -365,7 +343,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     const ctx = this.registrationChart.nativeElement.getContext('2d');
     if (!ctx) return;
 
-    // Mock registration data - in real app, calculate from actual data
     const mockData = {
       labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
       data: [45, 52, 38, 67, 73, 89],
@@ -451,7 +428,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     const ctx = this.activityChart.nativeElement.getContext('2d');
     if (!ctx) return;
 
-    // Mock activity data - in real app, load from service
     const mockData = {
       labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
       views: [5, 8, 6, 9, 7, 3, 2],
@@ -526,7 +502,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   selectUser(user: any): void {
     this.selectedUser = user;
-    // Create activity chart after selection
     setTimeout(() => {
       this.createActivityChart();
     }, 100);
@@ -537,7 +512,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.destroyChart('activity');
   }
 
-  // Utility methods
   getRoleLabel(role: string): string {
     const labels: { [key: string]: string } = {
       buyer: 'Comprador',
@@ -573,7 +547,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getEngagementRate(user: any): number {
-    // Simple engagement calculation: (contacts / views) * 100
     if (user.propertiesViewed === 0) return 0;
     return Math.min(
       Math.round((user.contactsMade / user.propertiesViewed) * 100),
@@ -592,7 +565,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.getEngagementRate(user) >= 15;
   }
 
-  // Actions
   refreshData(): void {
     this.loadUsers();
     this.showSuccessMessage('Datos actualizados');
@@ -612,21 +584,18 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   sendMessage(user: any): void {
-    // Implementation for sending message to user
     this.showInfoMessage(
       `Funcionalidad de mensaje para ${user.name} en desarrollo`
     );
   }
 
   viewProfile(user: any): void {
-    // Implementation for viewing user profile
     this.showInfoMessage(
       `Ver perfil de ${user.name} - Funcionalidad en desarrollo`
     );
   }
 
   exportUserData(user: any): void {
-    // Implementation for exporting user data
     this.showSuccessMessage(`Datos de ${user.name} exportados`);
   }
 
@@ -634,7 +603,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     const newStatus = user.status === 'active' ? 'inactive' : 'active';
     user.status = newStatus;
 
-    // Update in data source
     const index = this.users.findIndex((u) => u.id === user.id);
     if (index !== -1) {
       this.users[index] = { ...user };
@@ -665,7 +633,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((confirmed) => {
       if (confirmed) {
-        // Implementation for deleting user
         this.users = this.users.filter((u) => u.id !== user.id);
         this.applyFilters();
         this.calculateRoleData();
@@ -677,7 +644,6 @@ export class UserReportsComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // Snackbar messages
   private showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'Cerrar', {
       duration: 3000,

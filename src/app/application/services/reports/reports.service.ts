@@ -93,21 +93,17 @@ export interface ReportsResponse {
   providedIn: 'root',
 })
 export class ReportsService {
-  private baseUrl = '/api/reports'; // Adjust according to your API
+  private baseUrl = '/api/reports';
 
   constructor(private http: HttpClient) {}
 
-  // Analytics Data
   getAnalyticsData(
     startDate?: Date,
     endDate?: Date
   ): Observable<ReportsResponse> {
-    // In a real application, you would make HTTP requests to your backend
-    // For now, we'll return mock data
     return this.getMockAnalyticsData().pipe(delay(1000));
   }
 
-  // Property Reports
   getPropertyReports(filters?: any): Observable<PropertyReport[]> {
     return this.getMockPropertyReports().pipe(delay(800));
   }
@@ -116,7 +112,6 @@ export class ReportsService {
     return this.getMockPropertyPerformance(propertyId).pipe(delay(600));
   }
 
-  // User Reports
   getUserReports(filters?: any): Observable<UserReport[]> {
     return this.getMockUserReports().pipe(delay(800));
   }
@@ -125,7 +120,6 @@ export class ReportsService {
     return this.getMockUserActivity(userId).pipe(delay(600));
   }
 
-  // Sales Reports
   getSalesReports(filters?: any): Observable<SalesReport[]> {
     return this.getMockSalesReports().pipe(delay(800));
   }
@@ -134,7 +128,6 @@ export class ReportsService {
     return this.getMockSalesMetrics(period).pipe(delay(600));
   }
 
-  // Market Analysis
   getMarketTrends(): Observable<any> {
     return this.getMockMarketTrends().pipe(delay(1000));
   }
@@ -143,7 +136,6 @@ export class ReportsService {
     return this.getMockPriceComparison(location, propertyType).pipe(delay(800));
   }
 
-  // Mock Data Methods
   private getMockAnalyticsData(): Observable<ReportsResponse> {
     const mockData: ReportsResponse = {
       analytics: {
@@ -618,9 +610,7 @@ export class ReportsService {
     return of(comparison);
   }
 
-  // Export Methods
   exportAnalyticsData(format: 'pdf' | 'excel' | 'csv'): Observable<Blob> {
-    // Mock implementation - in real app, call backend
     return new Observable((observer) => {
       setTimeout(() => {
         const mockBlob = new Blob(['Mock export data'], {
@@ -659,7 +649,6 @@ export class ReportsService {
     });
   }
 
-  // Real-time updates (WebSocket simulation)
   getRealtimeUpdates(): Observable<any> {
     return new Observable((observer) => {
       const interval = setInterval(() => {
@@ -671,13 +660,12 @@ export class ReportsService {
           },
         };
         observer.next(randomUpdate);
-      }, 30000); // Update every 30 seconds
+      }, 30000);
 
       return () => clearInterval(interval);
     });
   }
 
-  // Advanced analytics methods
   getLocationAnalytics(): Observable<any> {
     const locationData = {
       topLocations: [

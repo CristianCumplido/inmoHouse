@@ -10,7 +10,6 @@ export class PasswordValidators {
       const password = control.value;
       const errors: ValidationErrors = {};
 
-      // Check minimum length
       if (password.length < 8) {
         errors['minLength'] = {
           requiredLength: 8,
@@ -18,27 +17,22 @@ export class PasswordValidators {
         };
       }
 
-      // Check for uppercase letter
       if (!/[A-Z]/.test(password)) {
         errors['requiresUppercase'] = true;
       }
 
-      // Check for lowercase letter
       if (!/[a-z]/.test(password)) {
         errors['requiresLowercase'] = true;
       }
 
-      // Check for number
       if (!/[0-9]/.test(password)) {
         errors['requiresNumber'] = true;
       }
 
-      // Check for special character
       if (!/[^A-Za-z0-9]/.test(password)) {
         errors['requiresSpecialChar'] = true;
       }
 
-      // Check for common patterns to avoid
       const commonPatterns = [
         /123456/,
         /qwerty/i,
@@ -75,7 +69,6 @@ export class PasswordValidators {
         return { passwordMismatch: true };
       }
 
-      // Remove the passwordMismatch error if passwords match
       if (confirmPassword.errors?.['passwordMismatch']) {
         const errors = { ...confirmPassword.errors };
         delete errors['passwordMismatch'];

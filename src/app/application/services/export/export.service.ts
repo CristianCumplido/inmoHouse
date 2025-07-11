@@ -7,7 +7,6 @@ import { ReportsService } from './../reports/reports.service';
 export class ExportService {
   constructor(private reportsService: ReportsService) {}
 
-  // Export chart as image
   exportChart(chartName: string, chartInstance: any): void {
     if (!chartInstance) {
       return;
@@ -26,7 +25,6 @@ export class ExportService {
     } catch (error) {}
   }
 
-  // Export data to CSV
   exportToCSV(data: any[], filename: string): void {
     if (!data || data.length === 0) {
       return;
@@ -40,7 +38,6 @@ export class ExportService {
           headers
             .map((header) => {
               const value = row[header];
-              // Handle commas and quotes in data
               if (
                 typeof value === 'string' &&
                 (value.includes(',') || value.includes('"'))
@@ -57,7 +54,6 @@ export class ExportService {
     } catch (error) {}
   }
 
-  // Export analytics report to PDF
   exportAnalyticsToPDF(): void {
     this.reportsService.exportAnalyticsData('pdf').subscribe({
       next: (blob: any) => {
@@ -70,7 +66,6 @@ export class ExportService {
     });
   }
 
-  // Export analytics report to Excel
   exportAnalyticsToExcel(): void {
     this.reportsService.exportAnalyticsData('excel').subscribe({
       next: (blob) => {
@@ -83,7 +78,6 @@ export class ExportService {
     });
   }
 
-  // Export property report
   exportPropertyReport(propertyId: string, format: 'pdf' | 'excel'): void {
     const extension = format === 'pdf' ? 'pdf' : 'xlsx';
 
@@ -100,7 +94,6 @@ export class ExportService {
     });
   }
 
-  // Export sales report
   exportSalesReport(period: string, format: 'pdf' | 'excel'): void {
     const extension = format === 'pdf' ? 'pdf' : 'xlsx';
 
@@ -117,7 +110,6 @@ export class ExportService {
     });
   }
 
-  // Create and download file
   private downloadFile(
     content: string,
     filename: string,
@@ -127,7 +119,6 @@ export class ExportService {
     this.downloadBlob(blob, filename);
   }
 
-  // Download blob as file
   private downloadBlob(blob: Blob, filename: string): void {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -137,7 +128,6 @@ export class ExportService {
     window.URL.revokeObjectURL(url);
   }
 
-  // Export table data to Excel format (basic implementation)
   exportTableToExcel(
     tableData: any[],
     filename: string,
@@ -148,7 +138,6 @@ export class ExportService {
     }
 
     try {
-      // Create a simple HTML table for Excel
       const headers = Object.keys(tableData[0]);
       const htmlTable = `
         <table>
@@ -177,7 +166,6 @@ export class ExportService {
     } catch (error) {}
   }
 
-  // Print functionality
   printReport(elementId: string): void {
     const printContent = document.getElementById(elementId);
     if (!printContent) {
@@ -233,11 +221,7 @@ export class ExportService {
     }, 250);
   }
 
-  // Generate comprehensive report
   generateComprehensiveReport(): void {
-    // This would typically call multiple services to gather all data
-
-    // Mock implementation
     setTimeout(() => {
       const reportData = {
         generatedAt: new Date(),
@@ -260,9 +244,7 @@ export class ExportService {
     }, 2000);
   }
 
-  // Bulk export functionality
   bulkExport(reportTypes: string[], format: 'pdf' | 'excel' | 'csv'): void {
-    // Mock implementation - in real app, this would call multiple services
     reportTypes.forEach((type, index) => {
       setTimeout(() => {
         const mockData = [
@@ -275,18 +257,14 @@ export class ExportService {
         } else {
           this.exportTableToExcel(mockData, `${type}-report`);
         }
-      }, index * 1000); // Stagger exports to avoid overwhelming the browser
+      }, index * 1000);
     });
   }
 
-  // Schedule export (for future implementation)
   scheduleExport(config: {
     reportType: string;
     format: string;
     frequency: 'daily' | 'weekly' | 'monthly';
     email: string;
-  }): void {
-    // This would typically send the configuration to a backend service
-    // that handles scheduled exports
-  }
+  }): void {}
 }

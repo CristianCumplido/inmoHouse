@@ -41,12 +41,10 @@ export class AuthService {
       .pipe(
         tap((user: any) => {
           this.currentUserSubject.next(user.data.user);
-          // Opcional: guarda en localStorage si quieres persistencia
           localStorage.setItem('currentUser', JSON.stringify(user));
         })
       );
   }
-  // ✅ Método para registrar un usuario
   register(userData: {
     name: string;
     email: string;

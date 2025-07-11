@@ -13,7 +13,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { ReportsService } from '../../../application/services/reports/reports.service';
 import { ExportService } from '../../../application/services/export/export.service';
 
-// Importación correcta de Chart.js
 import {
   Chart,
   registerables,
@@ -74,10 +73,8 @@ export class AnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private destroy$ = new Subject<void>();
 
-  // Form
   filterForm!: FormGroup;
 
-  // Data
   analytics: AnalyticsData = {
     totalProperties: 0,
     totalUsers: 0,
@@ -97,13 +94,10 @@ export class AnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
   topPropertiesData: TopProperty[] = [];
   recentActivities: Activity[] = [];
 
-  // Table columns
   topPropertiesColumns: string[] = ['title', 'views', 'price', 'actions'];
 
-  // Charts
   private charts: { [key: string]: Chart } = {};
 
-  // State
   loading = false;
 
   constructor(
@@ -112,7 +106,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
     private exportService: ExportService,
     private snackBar: MatSnackBar
   ) {
-    // Registrar todos los componentes de Chart.js
     Chart.register(...registerables);
     this.initializeForm();
   }
@@ -123,7 +116,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Delay chart initialization to ensure DOM is ready
     setTimeout(() => {
       this.initializeCharts();
     }, 100);
@@ -182,7 +174,7 @@ export class AnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
         startDate.setFullYear(startDate.getFullYear() - 1);
         break;
       case 'custom':
-        return; // Don't update dates for custom period
+        return;
     }
 
     this.filterForm.patchValue(
@@ -218,14 +210,12 @@ export class AnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
           this.showErrorMessage('Error al cargar los datos analíticos');
           this.loading = false;
 
-          // Load mock data on error
           this.loadMockData();
         },
       });
   }
 
   private loadMockData(): void {
-    // Mock data for demonstration
     this.analytics = {
       totalProperties: 1247,
       totalUsers: 3856,
@@ -429,7 +419,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
       { month: 'Jun', avgPrice: 465000000 },
     ];
 
-    // Configuración específica según el tipo de gráfico
     const isBarChart = chartType === 'bar';
 
     this.charts['priceTrends'] = new Chart(ctx, {
@@ -496,11 +485,9 @@ export class AnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
     const viewMode = this.filterForm.get('priceViewMode')?.value;
 
     if (this.charts['priceTrends']) {
-      // Destruir el gráfico existente
       this.charts['priceTrends'].destroy();
       delete this.charts['priceTrends'];
 
-      // Crear el nuevo gráfico con el tipo actualizado
       this.createPriceTrendsChart(viewMode as ChartType);
     }
   }
@@ -514,7 +501,6 @@ export class AnalyticsComponent implements OnInit, OnDestroy, AfterViewInit {
     this.charts = {};
   }
 
-  // Public methods
   applyFilters(): void {
     this.loadAnalyticsData();
     this.showSuccessMessage('Filtros aplicados correctamente');

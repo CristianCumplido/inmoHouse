@@ -1,4 +1,3 @@
-// core/services/loading.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 

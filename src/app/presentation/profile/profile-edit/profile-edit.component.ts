@@ -105,7 +105,6 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
     if (file) {
       this.selectedFile = file;
 
-      // Preview the selected image
       const reader = new FileReader();
       reader.onload = (e) => {
         this.currentImageUrl = e.target?.result as string;
@@ -120,7 +119,6 @@ export class ProfileEditComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const formData = this.profileForm.value;
 
-    // Prepare update data
     const updateData: Partial<User> = {
       name: formData.name,
       email: formData.email,

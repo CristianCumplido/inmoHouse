@@ -31,7 +31,7 @@ export class UserApiService {
   getAll(): Observable<User[]> {
     return this.http.get<{ data: User[] }>(`${this.baseUrl}/users`).pipe(
       tap((res) => {
-        this.Users = res.data; // ✅ asignación aquí
+        this.Users = res.data;
       }),
       map((res) => res.data)
     );
@@ -54,9 +54,6 @@ export class UserApiService {
   }
 
   create(user: User) {
-    // user.id = crypto.randomUUID();
-    // this.mockUsers.push(user);
-    // return of(user);
     return this.http.post<User>(`${this.baseUrl}/users`, user);
   }
 
@@ -65,7 +62,6 @@ export class UserApiService {
       .put<{ data: User }>(`${this.baseUrl}/users/${id}`, user)
       .pipe(
         tap((res) => {
-          // Opcional: actualizas el array local si quieres
           const idx = this.Users.findIndex((p) => p.id === id);
           if (idx !== -1) {
             this.Users[idx] = res.data;
@@ -75,15 +71,9 @@ export class UserApiService {
       );
   }
 
-  // delete(id: string) {
-  //   this.mockUsers = this.mockUsers.filter((u) => u.id !== id);
-  //   return of();
-  // }
-
   delete(id: string): Observable<any> {
     return this.http.delete<{ data: User }>(`${this.baseUrl}/users/${id}`).pipe(
       tap((res) => {
-        // Opcional: actualizas el array local si quieres
         const idx = this.Users.findIndex((p) => p.id === id);
         if (idx !== -1) {
           this.Users[idx] = res.data;

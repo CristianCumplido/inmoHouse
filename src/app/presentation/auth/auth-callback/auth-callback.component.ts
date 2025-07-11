@@ -33,22 +33,17 @@ export class AuthCallbackComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      // Esperar a que MSAL procese la respuesta de autenticación
       await this.msalService.instance.handleRedirectPromise();
 
-      // Verificar si el usuario está autenticado
       const accounts = this.msalService.instance.getAllAccounts();
 
       if (accounts.length > 0) {
-        // Usuario autenticado exitosamente, redirigir a la página principal
         this.router.navigate(['/']);
       } else {
-        // No hay cuentas autenticadas, redirigir al login
         this.router.navigate(['/login']);
       }
     } catch (error) {
       console.error('Error en auth-callback:', error);
-      // Manejar el error apropiadamente
       this.router.navigate(['/login'], {
         queryParams: { error: 'authentication_failed' },
       });

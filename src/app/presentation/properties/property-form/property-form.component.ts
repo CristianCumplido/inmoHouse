@@ -33,7 +33,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
   loading = false;
   imageLoading = false;
 
-  // Opciones para los selectores
   propertyTypes: PropertyType[] = [
     { value: 'casa', label: 'Casa', icon: 'home' },
     { value: 'apartamento', label: 'Apartamento', icon: 'apartment' },
@@ -137,7 +136,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
             propertyType: property.propertyType || '',
           });
 
-          // Marcar el formulario como pristine después de cargar los datos
           this.form.markAsPristine();
           this.form.markAsUntouched();
 
@@ -227,7 +225,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
       });
   }
 
-  // Métodos de navegación
   goBack(): void {
     this.location.back();
   }
@@ -236,7 +233,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard']);
   }
 
-  // Métodos de utilidad
   resetForm(): void {
     this.form.reset();
     this.initializeFormDefaults();
@@ -268,7 +264,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     return 'assets/images/default-property.jpg';
   }
 
-  // Métodos para cálculos y vista previa
   showMetrics(): boolean {
     const price = this.form.get('price')?.value;
     const area = this.form.get('area')?.value;
@@ -287,7 +282,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     return bedrooms > 0 ? area / bedrooms : 0;
   }
 
-  // Métodos para manejo de imágenes
   onImageLoad(): void {
     this.imageLoading = false;
   }
@@ -300,19 +294,15 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Métodos de validación personalizados
   isFieldInvalid(fieldName: string): boolean {
     const field = this.form.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
   hasValidationErrors(): boolean {
-    // Solo mostrar errores si el usuario ha interactuado con el formulario
-    // y hay campos inválidos
     return this.form.invalid;
   }
 
-  // Método mejorado para verificar si el formulario es válido para envío
   canSubmit(): boolean {
     return this.form.valid && !this.loading;
   }
@@ -351,7 +341,6 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     return labels[fieldName] || fieldName;
   }
 
-  // Métodos para mensajes
   private showSuccessMessage(message: string): void {
     this.snackBar.open(message, 'Cerrar', {
       duration: 3000,
@@ -379,33 +368,26 @@ export class PropertyFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Método para autocompletar ubicación (implementación futura)
   onLocationInput(event: any): void {
     const value = event.target.value;
     if (value && value.length > 2) {
-      // Aquí puedes implementar autocompletado de ubicaciones
-      // usando servicios como Google Places API
       console.log('Searching locations for:', value);
     }
   }
 
-  // Método para validar imagen URL
   validateImageUrl(): void {
     const imageUrl = this.form.get('imageUrl')?.value;
     if (imageUrl) {
       this.imageLoading = true;
-      // La validación ocurre automáticamente con onLoad y onError
     }
   }
 
-  // Método para obtener sugerencias de precios (implementación futura)
   suggestPrice(): void {
     const location = this.form.get('location')?.value;
     const area = this.form.get('area')?.value;
     const propertyType = this.form.get('propertyType')?.value;
 
     if (location && area && propertyType) {
-      // Aquí puedes implementar sugerencias de precio basadas en datos del mercado
       console.log('Suggesting price for:', { location, area, propertyType });
       this.showInfoMessage(
         'Funcionalidad de sugerencia de precios en desarrollo'

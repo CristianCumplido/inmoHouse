@@ -79,11 +79,8 @@ export class LoginComponent {
     this.isRegisterMode = !this.isRegisterMode;
   }
   ngOnInit() {
-    // Asegurarse de que MSAL esté inicializado
     if (!this.msalService.instance.getActiveAccount()) {
-      this.msalService.instance.handleRedirectPromise().then(() => {
-        // Inicialización completada
-      });
+      this.msalService.instance.handleRedirectPromise().then(() => {});
     }
   }
   get password(): AbstractControl | null {
@@ -96,14 +93,12 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
 
-      // this.router.navigate(['./admin']);
       const user = {
         email: email,
         password: password,
       };
       this.authService.login(user).subscribe({
         next: (response: any) => {
-          // console.log('Usuario Logeado:', response);
           let data = response.data;
           this.role.setUser({
             id: data.user.id,
@@ -128,15 +123,14 @@ export class LoginComponent {
           console.error('Error en el loguear:', error);
         },
       });
-      // Aquí conectas con backend para login manual
     }
   }
   mostrarNotificacion(message: string, duration: number = 5000) {
     this.snackBar.open(message, 'Cerrar', {
-      duration: duration, // Duración en milisegundos
-      verticalPosition: 'top', // 'bottom' | 'top'
-      horizontalPosition: 'right', // 'start' | 'center' | 'end' | 'left' | 'right'
-      panelClass: ['custom-snackbar'], // clase CSS personalizada (opcional)
+      duration: duration,
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+      panelClass: ['custom-snackbar'],
     });
   }
 
@@ -151,7 +145,6 @@ export class LoginComponent {
       return { mismatch: true };
     }
 
-    // Clear mismatch error if passwords match
     const errors = confirmPassword.errors;
     if (errors) {
       delete errors['mismatch'];
@@ -198,7 +191,6 @@ export class LoginComponent {
     return (strength / 5) * 100;
   }
 
-  // Password requirement checkers
   hasMinLength(password: string): boolean {
     return password ? password.length >= 8 : false;
   }
@@ -216,11 +208,8 @@ export class LoginComponent {
   }
 
   onPasswordChange(): void {
-    // Trigger form validation when password changes
     this.registerForm.get('confirmPassword')?.updateValueAndValidity();
   }
-
-  // Error message methods
 
   getNewPasswordErrorMessage(): string {
     if (this.password?.hasError('required')) {
@@ -259,7 +248,6 @@ export class LoginComponent {
         role: UserRole.CLIENT,
         phone: '573001234567',
       };
-      // Aquí conectas con backend para registrar
       this.authService.register(newUser).subscribe({
         next: (response) => {
           this.registerForm.reset();
