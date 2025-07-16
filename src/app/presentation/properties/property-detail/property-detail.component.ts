@@ -184,7 +184,7 @@ export class PropertyDetailComponent implements OnInit, OnDestroy {
   scheduleVisit(): void {
     if (!this.property) return;
 
-    this.showInfoMessage('Funcionalidad de programar visita en desarrollo');
+    this.router.navigate(['/appointments/new']);
   }
 
   openMortgageCalculator(): void {

@@ -7,6 +7,10 @@ import { UsersModule } from './presentation/users/users.module';
 import { ProfileModule } from './presentation/profile/profile.module';
 import { ChangePasswordModule } from './presentation/change-password/change-password.module';
 import { ReportsModule } from './presentation/reports/reports.module';
+import { loadRemoteModule } from '@angular-architects/module-federation';
+import { UserRole } from './core/models/roles.enum';
+import { authRoleGuard } from './application/guards/auth/auth-role.guard';
+
 const routes: Routes = [
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
   {
@@ -46,6 +50,18 @@ const routes: Routes = [
       import('./presentation/reports/reports.module').then(
         (m) => m.ReportsModule
       ),
+  },
+  {
+    path: 'appointments',
+    loadChildren: () =>
+      loadRemoteModule({
+        type: 'module',
+        remoteEntry: 'https://inmo-house-citas.vercel.app/remoteEntry.js',
+        exposedModule: './AppointmentsModule',
+      }).then((m) => m.AppointmentsModule),
+    canActivate: [
+      authRoleGuard([UserRole.ADMIN, UserRole.AGENT, UserRole.CLIENT]),
+    ],
   },
 ];
 @NgModule({
